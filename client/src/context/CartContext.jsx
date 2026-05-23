@@ -43,10 +43,13 @@ export function CartProvider({ children }) {
   const [items, setItems] = useState([]);
   const [toast, setToast] = useState(null);
   const [initialized, setInitialized] = useState(false);
+  const initializedRef = useRef(false);
   const token = typeof window !== "undefined" ? localStorage.getItem("classyshop_token") : null;
   const lastLoginState = useRef(isLoggedIn);
 
   useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
     const justLoggedIn = isLoggedIn && !lastLoginState.current;
     lastLoginState.current = isLoggedIn;
 

@@ -4,17 +4,25 @@ import { API } from "../config";
 const AuthContext = createContext(null);
 
 function loadUser() {
-  const stored = localStorage.getItem("classyshop_token");
-  const loginTime = localStorage.getItem("classyshop_login_time");
-  if (stored && loginTime) {
-    const elapsed = Date.now() - Number(loginTime);
-    if (elapsed > 86400000) {
-      localStorage.removeItem("classyshop_token");
-      localStorage.removeItem("classyshop_user");
-      localStorage.removeItem("classyshop_login_time");
-      return null;
+  try {
+    const stored = localStorage.getItem("classyshop_token");
+    const loginTime = localStorage.getItem("classyshop_login_time");
+    if (stored && loginTime) {
+      const elapsed = Date.now() - Number(loginTime);
+      if (elapsed > 86400000) {
+        localStorage.removeItem("classyshop_token");
+        localStorage.removeItem("classyshop_user");
+        localStorage.removeItem("classyshop_login_time");
+        return null;
+      }
+      const raw = localStorage.getItem("classyshop_user");
+      if (!raw) return null;
+      return JSON.parse(raw);
     }
-    return JSON.parse(localStorage.getItem("classyshop_user") || "null");
+  } catch {
+    localStorage.removeItem("classyshop_token");
+    localStorage.removeItem("classyshop_user");
+    localStorage.removeItem("classyshop_login_time");
   }
   return null;
 }

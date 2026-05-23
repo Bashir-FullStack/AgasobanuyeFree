@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { FaWhatsapp } from "react-icons/fa";
@@ -70,7 +70,7 @@ import BestSellersPage from "./pages/BestSellersPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
 function Layout({ children, seo }) {
-  useEffect(() => { window.scrollTo(0, 0); });
+  useEffect(() => { window.scrollTo(0, 0); }, []);
   useEffect(() => {
     fetch(`${API}/settings`)
       .then(r => r.json())
