@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { FaWhatsapp } from "react-icons/fa";
 import { loadStripe } from "@stripe/stripe-js";
@@ -36,7 +36,10 @@ import DownloadApp from "./components/DownloadApp";
 import LiveChat from "./components/LiveChat";
 import SignUpBanner from "./components/SignUpBanner";
 import CookieConsent from "./components/CookieConsent";
+import AnnouncementBanner from "./components/AnnouncementBanner";
+import PageTransition from "./components/PageTransition";
 import Footer from "./components/Footer";
+import { TranslationProvider } from "./i18n/TranslationContext";
 
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -70,6 +73,7 @@ import BestSellersPage from "./pages/BestSellersPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
 function Layout({ children, seo }) {
+  const location = useLocation();
   useEffect(() => { window.scrollTo(0, 0); }, []);
   useEffect(() => {
     fetch(`${API}/settings`)
@@ -90,7 +94,8 @@ function Layout({ children, seo }) {
       <Header />
       <Navigation />
       <SignUpBanner />
-      <main>{children}</main>
+      <AnnouncementBanner />
+      <main><PageTransition key={location.pathname}>{children}</PageTransition></main>
       <CookieConsent />
       <DownloadApp />
       <a href="https://wa.me/250798388890" target="_blank" rel="noopener noreferrer" className="fixed bottom-24 lg:bottom-6 right-6 z-50 group">
@@ -157,6 +162,7 @@ export default function App() {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || "652032330761-m1bcrab25iev63dr42mjmd657sclsjt8.apps.googleusercontent.com"}>
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <TranslationProvider>
       <AuthProvider>
       <CartProvider>
         <WishlistProvider>
@@ -200,6 +206,7 @@ export default function App() {
         </WishlistProvider>
       </CartProvider>
       </AuthProvider>
+      </TranslationProvider>
     </BrowserRouter>
     </GoogleOAuthProvider>
   );

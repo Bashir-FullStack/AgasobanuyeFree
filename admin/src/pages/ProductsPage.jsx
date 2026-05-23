@@ -18,6 +18,33 @@ export default function ProductsPage() {
   const [selected, setSelected] = useState([]);
   const [categories, setCategories] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const [editing, setEditing] = useState(null);
+  const [editValue, setEditValue] = useState("");
+
+  const startEdit = (id, field, current) => {
+    setEditing({ id, field });
+    setEditValue(current?.toString() || "");
+  };
+
+  const saveEdit = async (id, field) => {
+    const val = field === "price" ? parseFloat(editValue) : parseInt(editValue, 10);
+    if (isNaN(val) || val < 0) return;
+    try {
+      await fetch(`${API}/admin/products/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ [field]: val }),
+      });
+      setProducts(prev => prev.map(p => p.id === id ? { ...p, [field]: val } : p));
+    } catch {}
+    setEditing(null);
+    setEditValue("");
+  };
+
+  const cancelEdit = () => {
+    setEditing(null);
+    setEditValue("");
+  };
 
   const fetchProducts = (p) => {
     setLoading(true);
@@ -165,13 +192,26 @@ export default function ProductsPage() {
                             </div>
                           </td>
                           <td className="px-5 py-3.5" style={{ color: "var(--text-secondary)" }}>{p.brand}</td>
-                          <td className="px-5 py-3.5 font-bold" style={{ color: "var(--text-primary)" }}>FRw {Math.round(p.price).toLocaleString()}</td>
+                          <td className="px-5 py-3.5 font-bold" style={{ color: "var(--text-primary)" }}>
+                            {editing?.id === p.id && editing?.field === "price" ? (
+                              <div className="flex items-center gap-1">
+                                <span className="text-xs">FRw</span>
+                                <input type="number" step="0.01" min="0" value={editValue} onChange={(e) => setEditValue(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") saveEdit(p.id, "price"); if (e.key === "Escape") cancelEdit(); }} onBlur={() => saveEdit(p.id, "price")} className="w-24 px-2 py-1 text-sm rounded-lg border border-[#2275fc] outline-none" style={{ backgroundColor: "var(--bg-input)", color: "var(--text-primary)" }} autoFocus />
+                              </div>
+                            ) : (
+                              <span onDoubleClick={() => startEdit(p.id, "price", p.price)} className="cursor-pointer hover:bg-[var(--bg-page)] rounded px-1 -ml-1 transition" title="Double-click to edit">FRw {Math.round(p.price).toLocaleString()}</span>
+                            )}
+                          </td>
                           <td className="px-5 py-3.5">
-                            <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${
-                              (p.quantity || 0) > 5 ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400" :
-                              (p.quantity || 0) > 0 ? "bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400" :
-                              "bg-red-50 text-red-500 dark:bg-red-900/20 dark:text-red-400"
-                            }`}>{p.quantity || 0}</span>
+                            {editing?.id === p.id && editing?.field === "stock" ? (
+                              <input type="number" min="0" value={editValue} onChange={(e) => setEditValue(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") saveEdit(p.id, "stock"); if (e.key === "Escape") cancelEdit(); }} onBlur={() => saveEdit(p.id, "stock")} className="w-20 px-2 py-1 text-sm rounded-lg border border-[#2275fc] outline-none" style={{ backgroundColor: "var(--bg-input)", color: "var(--text-primary)" }} autoFocus />
+                            ) : (
+                              <span onDoubleClick={() => startEdit(p.id, "stock", p.quantity || 0)} className={`inline-block text-xs font-bold px-2.5 py-1 rounded-lg cursor-pointer hover:ring-2 hover:ring-[#2275fc]/30 transition ${
+                                (p.quantity || 0) > 5 ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400" :
+                                (p.quantity || 0) > 0 ? "bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400" :
+                                "bg-red-50 text-red-500 dark:bg-red-900/20 dark:text-red-400"
+                              }`} title="Double-click to edit">{p.quantity || 0}</span>
+                            )}
                           </td>
                           <td className="px-5 py-3.5">
                             <div className="flex items-center gap-1">
@@ -230,13 +270,44 @@ export default function ProductsPage() {
                       </div>
                     </td>
                     <td className="px-5 py-4" style={{ color: "var(--text-secondary)" }}>{p.brand}</td>
-                    <td className="px-5 py-4 font-bold" style={{ color: "var(--text-primary)" }}>FRw {Math.round(p.price).toLocaleString()}</td>
+                    <td className="px-5 py-4 font-bold" style={{ color: "var(--text-primary)" }}>
+                      {editing?.id === p.id && editing?.field === "price" ? (
+                        <div className="flex items-center gap-1">
+                          <span className="text-xs">FRw</span>
+                          <input
+                            type="number" step="0.01" min="0"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            onKeyDown={(e) => { if (e.key === "Enter") saveEdit(p.id, "price"); if (e.key === "Escape") cancelEdit(); }}
+                            onBlur={() => saveEdit(p.id, "price")}
+                            className="w-24 px-2 py-1 text-sm rounded-lg border border-[#2275fc] outline-none"
+                            style={{ backgroundColor: "var(--bg-input)", color: "var(--text-primary)" }}
+                            autoFocus
+                          />
+                        </div>
+                      ) : (
+                        <span onDoubleClick={() => startEdit(p.id, "price", p.price)} className="cursor-pointer hover:bg-[var(--bg-page)] rounded px-1 -ml-1 transition" title="Double-click to edit">FRw {Math.round(p.price).toLocaleString()}</span>
+                      )}
+                    </td>
                     <td className="px-5 py-4">
-                      <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${
-                        (p.quantity || 0) > 5 ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400" :
-                        (p.quantity || 0) > 0 ? "bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400" :
-                        "bg-red-50 text-red-500 dark:bg-red-900/20 dark:text-red-400"
-                      }`}>{p.quantity || 0}</span>
+                      {editing?.id === p.id && editing?.field === "stock" ? (
+                        <input
+                          type="number" min="0"
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                          onKeyDown={(e) => { if (e.key === "Enter") saveEdit(p.id, "stock"); if (e.key === "Escape") cancelEdit(); }}
+                          onBlur={() => saveEdit(p.id, "stock")}
+                          className="w-20 px-2 py-1 text-sm rounded-lg border border-[#2275fc] outline-none"
+                          style={{ backgroundColor: "var(--bg-input)", color: "var(--text-primary)" }}
+                          autoFocus
+                        />
+                      ) : (
+                        <span onDoubleClick={() => startEdit(p.id, "stock", p.quantity || 0)} className={`inline-block text-xs font-bold px-2.5 py-1 rounded-lg cursor-pointer hover:ring-2 hover:ring-[#2275fc]/30 transition ${
+                          (p.quantity || 0) > 5 ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400" :
+                          (p.quantity || 0) > 0 ? "bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400" :
+                          "bg-red-50 text-red-500 dark:bg-red-900/20 dark:text-red-400"
+                        }`} title="Double-click to edit">{p.quantity || 0}</span>
+                      )}
                     </td>
                     <td className="px-5 py-4"><span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-[#2275fc]/10 text-[#2275fc]">{p.category}</span></td>
                     <td className="px-5 py-4">

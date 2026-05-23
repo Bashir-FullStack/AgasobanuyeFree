@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FiHelpCircle } from "react-icons/fi";
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube, FaLinkedinIn, FaTiktok } from "react-icons/fa";
 import { API } from "../config";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const socialIcons = {
   facebook: FaFacebookF,
@@ -54,6 +55,7 @@ export default function TopBar() {
         <span className="text-center text-gray-400 tracking-wide">Get up to 50% off new season styles, limited time only</span>
         <div className="flex items-center justify-end gap-5">
           <Link to="/help" className="text-gray-400 hover:text-primary transition flex items-center gap-1"><FiHelpCircle size={12} /> Help Center</Link>
+          <LanguageSwitcher variant="minimal" />
           <span className="text-primary font-semibold">FRw</span>
         </div>
       </div>

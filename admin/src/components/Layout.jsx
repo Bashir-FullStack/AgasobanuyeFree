@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState, useRef } from "react";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const GridIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -145,6 +146,12 @@ const navItems = [
     label: "Subscribers", icon: <UsersIcon />,
     children: [
       { path: "/subscribers", label: "Email Subscribers" },
+    ],
+  },
+  {
+    label: "Announcements", icon: <BellIcon />,
+    children: [
+      { path: "/announcements", label: "All Announcements" },
     ],
   },
   {
@@ -409,6 +416,8 @@ export default function Layout({ children }) {
             </div>
 
             <div className="flex items-center gap-2 lg:gap-3">
+              {/* Language Switcher */}
+              <LanguageSwitcher />
               {/* Dark Mode Toggle */}
               <button
                 onClick={() => setDarkMode(!darkMode)}

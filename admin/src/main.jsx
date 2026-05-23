@@ -4,6 +4,7 @@ import "./index.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import AuthProvider, { useAuth } from "./context/AuthContext";
+import { TranslationProvider } from "./i18n/TranslationContext";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "652032330761-m1bcrab25iev63dr42mjmd657sclsjt8.apps.googleusercontent.com";
 import LoginPage from "./pages/LoginPage";
@@ -35,6 +36,7 @@ import SalesReportPage from "./pages/SalesReportPage";
 import DeliveryPage from "./pages/DeliveryPage";
 import CouponsPage from "./pages/CouponsPage";
 import SubscribersPage from "./pages/SubscribersPage";
+import AnnouncementsPage from "./pages/AnnouncementsPage";
 import Layout from "./components/Layout";
 
 function ProtectedRoute({ children }) {
@@ -46,6 +48,7 @@ function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <TranslationProvider>
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
@@ -66,6 +69,7 @@ function App() {
           <Route path="/delivery" element={<ProtectedRoute><Layout><DeliveryPage /></Layout></ProtectedRoute>} />
           <Route path="/coupons" element={<ProtectedRoute><Layout><CouponsPage /></Layout></ProtectedRoute>} />
           <Route path="/subscribers" element={<ProtectedRoute><Layout><SubscribersPage /></Layout></ProtectedRoute>} />
+          <Route path="/announcements" element={<ProtectedRoute><Layout><AnnouncementsPage /></Layout></ProtectedRoute>} />
           <Route path="/orders" element={<ProtectedRoute><Layout><OrdersPage /></Layout></ProtectedRoute>} />
           <Route path="/orders/detail" element={<ProtectedRoute><Layout><OrderDetailPage /></Layout></ProtectedRoute>} />
           <Route path="/orders/tracking" element={<ProtectedRoute><Layout><OrderTrackingPage /></Layout></ProtectedRoute>} />
@@ -85,6 +89,7 @@ function App() {
           <Route path="/settings/websettings/payment" element={<ProtectedRoute><Layout><WebSettingsPage /></Layout></ProtectedRoute>} />
         </Routes>
       </AuthProvider>
+      </TranslationProvider>
     </BrowserRouter>
     </GoogleOAuthProvider>
   );
