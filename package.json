@@ -1,0 +1,13 @@
+{
+  "name": "hiromarrt",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Hiromart - Full e-commerce platform",
+  "scripts": {
+    "dev:client": "cd client && npm run dev",
+    "dev:admin": "cd admin && npm run dev",
+    "build:client": "cd client && npm run build",
+    "build:admin": "cd admin && npm run build",
+    "install:all": "cd client && npm install && cd ../admin && npm install"
+  }
+}
