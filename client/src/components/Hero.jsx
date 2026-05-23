@@ -45,12 +45,6 @@ export default function Hero() {
                         <Link to={s.link || "#"} className="inline-block bg-primary text-white px-6 md:px-8 py-2.5 md:py-3.5 rounded-xl text-xs md:text-sm font-semibold hover:bg-primary-dark transition shadow-lg shadow-primary/25" style={{ animation: "fadeSlideLeft 0.8s ease-out 0.6s both" }}>Shop Now →</Link>
                       )}
                     </div>
-                    <style>{`
-                      @keyframes fadeSlideLeft {
-                        from { opacity: 0; transform: translateX(40px); }
-                        to { opacity: 1; transform: translateX(0); }
-                      }
-                    `}</style>
                   </div>
                 </SwiperSlide>
               ))}
