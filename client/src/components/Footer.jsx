@@ -73,9 +73,7 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-base mb-5 text-white">Contact Us</h4>
             <ul className="space-y-3.5 text-sm text-gray-400">
-              <li className="flex items-start gap-3"><span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5"><FiMapPin className="text-primary" size={15} /></span><span>hiromart
-
-, 507-Union Trade Centre, Kigali, Rwanda</span></li>
+              <li className="flex items-start gap-3"><span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5"><FiMapPin className="text-primary" size={15} /></span><span>AgasobanuyeFree, 507-Union Trade Centre, Kigali, Rwanda</span></li>
               <li className="flex items-center gap-3"><span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0"><FiPhone className="text-primary" size={15} /></span><a href="tel:+250798388890" className="hover:text-primary transition">+250 798 388 890</a></li>
               <li className="flex items-center gap-3"><span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0"><FiMail className="text-primary" size={15} /></span><a href="mailto:bashirfullstack3@gmail.com" className="hover:text-primary transition break-all">bashirfullstack3@gmail.com</a></li>
               <li className="flex items-start gap-3"><span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5"><FiClock className="text-primary" size={15} /></span><div><span className="font-medium text-white block">Working Hours</span><span className="text-gray-500">Mon-Sat: 8:00 AM - 8:00 PM</span></div></li>
@@ -83,17 +81,15 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="font-bold text-base mb-5 text-white">Products</h4>
+            <h4 className="font-bold text-base mb-5 text-white">Movies</h4>
             <ul className="space-y-2.5 text-sm">
               {[
-                { to: "/prices-drop", label: "Prices Drop" },
-                { to: "/new-products", label: "New Products" },
-                { to: "/best-sellers", label: "Best Sellers" },
-                { to: "/sitemap", label: "Sitemap" },
-                { to: "/stores", label: "Stores" },
-                { to: "/accessories", label: "Accessories" },
+                { to: "/movies", label: "Browse Movies" },
+                { to: "/genres", label: "Genres" },
+                { to: "/favorites", label: "My List" },
+                { to: "/about", label: "About Us" },
               ].map(({ to, label }) => (
-                <li key={to}><Link to={to} className="text-gray-400 hover:text-primary transition flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-gray-600 group-hover:bg-primary" />{label}</Link></li>
+                <li key={to}><Link to={to} className="text-gray-400 hover:text-primary transition flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-gray-600" />{label}</Link></li>
               ))}
             </ul>
           </div>
@@ -101,11 +97,10 @@ export default function Footer() {
             <h4 className="font-bold text-base mb-5 text-white">Our Company</h4>
             <ul className="space-y-2.5 text-sm">
               {[
-                { to: "/shop", label: "Delivery" },
-                { to: "/terms", label: "Terms & Conditions" },
-                { to: "/secure-payment", label: "Secure Payment" },
-                { to: "/contact", label: "Contact Us" },
                 { to: "/about", label: "About Us" },
+                { to: "/contact", label: "Contact" },
+                { to: "/terms", label: "Terms of Service" },
+                { to: "/help", label: "Help Center" },
               ].map(({ to, label }) => (
                 <li key={to}><Link to={to} className="text-gray-400 hover:text-primary transition flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-gray-600" />{label}</Link></li>
               ))}
@@ -115,12 +110,10 @@ export default function Footer() {
             <h4 className="font-bold text-base mb-5 text-white">Your Account</h4>
             <ul className="space-y-2.5 text-sm">
               {[
-                { to: "/order-tracking", label: "Order Tracking" },
+                { to: "/profile", label: "My Account" },
+                { to: "/favorites", label: "My List" },
                 { to: "/login", label: "Sign In" },
                 { to: "/signup", label: "Create Account" },
-                { to: "/discounts", label: "Discount" },
-                { to: "/wishlist", label: "Wishlist" },
-                { to: "/credit-slip", label: "Credit Slip" },
               ].map(({ to, label }) => (
                 <li key={to}><Link to={to} className="text-gray-400 hover:text-primary transition flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-gray-600" />{label}</Link></li>
               ))}
@@ -138,7 +131,7 @@ export default function Footer() {
               </div>
             ) : (
               <>
-              <p className="text-sm text-gray-400 mb-4 leading-relaxed">Subscribe to get news about special discounts and promotions.</p>
+              <p className="text-sm text-gray-400 mb-4 leading-relaxed">Subscribe to get news about new releases and exclusive content.</p>
               <form onSubmit={handleSubscribe} className="flex flex-col gap-2">
                 <div className="relative">
                   <FiSend className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
@@ -170,9 +163,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="flex flex-col md:flex-row items-center justify-between py-8 gap-4">
-          <p className="text-xs text-gray-500">&copy; 2026 hiromart
-
-. All Rights Reserved.</p>
+          <p className="text-xs text-gray-500">&copy; 2026 AgasobanuyeFree. All Rights Reserved.</p>
           <div className="flex items-center gap-2">
             {["https://i.pinimg.com/736x/7f/eb/02/7feb0256dc66ee941c1a5d4c945ed60b.jpg", "https://i.pinimg.com/736x/a2/68/8b/a2688b6db24e7fdc9b6de25aa7196345.jpg", "https://i.pinimg.com/736x/d1/08/7d/d1087d1abc263b95a2bea32cd9e70ba0.jpg"].map((src, i) => (
               <div key={i} className="px-3 py-2 bg-white/5 rounded-lg"><img src={src} alt="Payment" className="h-6" /></div>

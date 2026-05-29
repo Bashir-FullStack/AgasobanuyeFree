@@ -211,3 +211,43 @@ img { -webkit-user-drag: none; user-select: none; }
 }
 
 body { background-color: var(--bg-page) !important; }
+
+/* ── Responsive helpers ── */
+
+/* Safe area for mobile notches/home indicator */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Mobile bottom nav padding (for fixed bottom nav) */
+@media (max-width: 1023px) {
+  body { padding-bottom: 64px; }
+  .main-content { min-height: calc(100vh - 64px); }
+}
+
+/* Scrollbar hide for movie rows */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
+/* Smooth snap scrolling for mobile movie rows */
+.snap-x { scroll-snap-type: x mandatory; }
+.snap-start { scroll-snap-align: start; }
+
+/* Movie card hover effects */
+@media (hover: hover) {
+  .movie-card-hover:hover { transform: translateY(-4px); }
+}
+
+/* Loading shimmer */
+@keyframes shimmer-loading {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-input) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer-loading 1.5s ease-in-out infinite;
+}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, useLocation, useNavigate, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, useNavigate, Link, Navigate } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
@@ -42,6 +42,7 @@ import PricesDropPage from "./pages/PricesDropPage";
 import NewProductsPage from "./pages/NewProductsPage";
 import BestSellersPage from "./pages/BestSellersPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import MoviePage from "./pages/MoviePage";
 
 /* ── Icons ── */
 const HomeIcon = () => (
@@ -103,12 +104,11 @@ const CloseIcon = () => (
 
 const sidebarLinks = [
   { to: "/", icon: <HomeIcon />, label: "Home" },
-  { to: "/shop", icon: <MovieIcon />, label: "Movies" },
-  { to: "/shop", icon: <SportIcon />, label: "Live Sports" },
-  { to: "/cart", icon: <DownloadIcon />, label: "Downloads" },
-  { to: "/categories", icon: <CommunityIcon />, label: "Community" },
-  { to: "/about", icon: <NewsIcon />, label: "News" },
-  { to: "/profile", icon: <SettingsIcon />, label: "Settings" },
+  { to: "/movies", icon: <MovieIcon />, label: "Movies" },
+  { to: "/genres", icon: <SportIcon />, label: "Genres" },
+  { to: "/favorites", icon: <DownloadIcon />, label: "My List" },
+  { to: "/about", icon: <CommunityIcon />, label: "About" },
+  { to: "/contact", icon: <NewsIcon />, label: "Contact" },
 ];
 
 /* ── Streaming Layout ── */
@@ -142,7 +142,7 @@ function StreamingLayout({ children, seo }) {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (searchQuery.trim()) navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+    if (searchQuery.trim()) navigate(`/movies?search=${encodeURIComponent(searchQuery.trim())}`);
     setSearchOpen(false);
   };
 
@@ -157,12 +157,10 @@ function StreamingLayout({ children, seo }) {
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-3" onClick={() => setSidebarOpen(false)}>
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#f5c518] to-[#d4a800] flex items-center justify-center text-black font-bold text-sm shadow-lg shadow-[#f5c518]/20">
-                H
+                A
               </div>
               <div>
-                <span className="text-lg font-extrabold tracking-tight" style={{ color: "var(--text-primary)" }}>hiromart
-
-</span>
+                <span className="text-lg font-extrabold tracking-tight" style={{ color: "var(--text-primary)" }}>AgasobanuyeFree</span>
                 <span className="block text-[10px] font-medium uppercase tracking-widest text-[#f5c518]">Streaming</span>
               </div>
             </Link>
@@ -195,24 +193,22 @@ function StreamingLayout({ children, seo }) {
         </div>
 
         <div className="flex-shrink-0 px-4 py-4 text-center border-t" style={{ borderColor: "var(--border-color)" }}>
-          <p className="text-[10px]" style={{ color: "var(--text-muted)" }}>hiromart
-
- Streaming v1.0</p>
+          <p className="text-[10px]" style={{ color: "var(--text-muted)" }}>AgasobanuyeFree Streaming v1.0</p>
         </div>
       </div>
 
       {/* Main area */}
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Top Navbar */}
-        <div className="fixed top-0 right-0 z-20 h-16 lg:h-[72px] flex items-center px-4 lg:px-6 transition-all duration-300"
-          style={{ width: "calc(100% - 260px)", backgroundColor: "var(--bg-card)", boxShadow: "var(--shadow)", borderBottom: "1px solid var(--border-color)" }}>
+        <div className="fixed top-0 right-0 z-20 h-16 lg:h-[72px] flex items-center px-4 lg:px-6 transition-all duration-300 left-0 lg:left-[260px]"
+          style={{ backgroundColor: "var(--bg-card)", boxShadow: "var(--shadow)", borderBottom: "1px solid var(--border-color)" }}>
           <div className="flex items-center justify-between gap-3 w-full">
             <div className="flex items-center gap-3 lg:gap-4 flex-1">
               <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-xl hover:bg-[var(--bg-page)] transition" style={{ color: "var(--text-muted)" }}>
                 <MenuIcon />
               </button>
               <Link to="/" className="lg:hidden">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#f5c518] to-[#d4a800] flex items-center justify-center text-black font-bold text-xs">H</div>
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#f5c518] to-[#d4a800] flex items-center justify-center text-black font-bold text-xs">A</div>
               </Link>
               <div className="hidden lg:block relative flex-1 max-w-md">
                 <form onSubmit={handleSearch} className="flex items-center" style={{ backgroundColor: "var(--bg-input)", border: "1px solid var(--border-color)", borderRadius: "12px" }}>
@@ -262,7 +258,7 @@ function StreamingLayout({ children, seo }) {
                     <img src={user.avatar} alt="" className="w-8 h-8 rounded-lg object-cover" />
                   ) : (
                     <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#f5c518] to-[#d4a800] flex items-center justify-center text-black text-xs font-bold shadow-sm">
-                      {user?.name?.charAt(0)?.toUpperCase() || "H"}
+                      {user?.name?.charAt(0)?.toUpperCase() || "A"}
                     </div>
                   )}
                   <span className="hidden sm:block text-sm font-semibold max-w-[100px] truncate" style={{ color: "var(--text-primary)" }}>
@@ -278,11 +274,11 @@ function StreamingLayout({ children, seo }) {
                           <img src={user.avatar} alt="" className="w-14 h-14 rounded-2xl object-cover mx-auto mb-2" />
                         ) : (
                           <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#f5c518] to-[#d4a800] flex items-center justify-center text-black text-lg font-bold mx-auto mb-2">
-                            {user?.name?.charAt(0)?.toUpperCase() || "H"}
+                            {user?.name?.charAt(0)?.toUpperCase() || "A"}
                           </div>
                         )}
                         <p className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>{user?.name || "Guest"}</p>
-                        <p className="text-xs" style={{ color: "var(--text-secondary)" }}>{user?.email || "guest@hiromart.com"}</p>
+                        <p className="text-xs" style={{ color: "var(--text-secondary)" }}>{user?.email || "guest@agasobanuyefree.com"}</p>
                       </div>
                       <div className="p-2">
                         <button onClick={() => { setProfileOpen(false); navigate("/profile"); }} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-xl transition-all hover:bg-[var(--bg-page)]" style={{ color: "var(--text-secondary)" }}>
@@ -308,7 +304,8 @@ function StreamingLayout({ children, seo }) {
         </div>
 
         {/* Main content */}
-        <div className="main-content min-h-screen pt-16 lg:pt-[72px] transition-all duration-300" style={{ paddingLeft: "260px", backgroundColor: "var(--bg-page)" }}>
+        <div className="main-content min-h-screen pt-16 lg:pt-[72px] transition-all duration-300 lg:ml-[260px]"
+          style={{ backgroundColor: "var(--bg-page)" }}>
           <div className="main-content-inner p-4 lg:p-6">
             <div className="main-content-wrap w-full max-w-[1700px] mx-auto">
               {children}
@@ -325,92 +322,221 @@ function StreamingLayout({ children, seo }) {
   );
 }
 
+/* ── Skeleton Loader ── */
+function SkeletonCard() {
+  return (
+    <div className="flex-shrink-0 w-[180px] lg:w-[200px] rounded-xl overflow-hidden animate-pulse" style={{ backgroundColor: "var(--bg-card)" }}>
+      <div className="aspect-video" style={{ backgroundColor: "var(--border-color)" }} />
+      <div className="p-3 space-y-2">
+        <div className="h-4 rounded w-3/4" style={{ backgroundColor: "var(--border-color)" }} />
+        <div className="h-3 rounded w-1/2" style={{ backgroundColor: "var(--border-color)" }} />
+      </div>
+    </div>
+  );
+}
+
+function SkeletonHero() {
+  return (
+    <div className="relative rounded-2xl overflow-hidden min-h-[300px] lg:min-h-[420px] animate-pulse" style={{ backgroundColor: "var(--bg-card)" }}>
+      <div className="absolute inset-0 flex items-end p-6 lg:p-12">
+        <div className="space-y-3 w-full max-w-md">
+          <div className="h-6 rounded-full w-24" style={{ backgroundColor: "var(--border-color)" }} />
+          <div className="h-10 rounded w-3/4" style={{ backgroundColor: "var(--border-color)" }} />
+          <div className="h-4 rounded w-full" style={{ backgroundColor: "var(--border-color)" }} />
+          <div className="h-4 rounded w-2/3" style={{ backgroundColor: "var(--border-color)" }} />
+          <div className="flex gap-3 mt-4">
+            <div className="h-12 rounded-xl w-32" style={{ backgroundColor: "var(--border-color)" }} />
+            <div className="h-12 rounded-xl w-32" style={{ backgroundColor: "var(--border-color)" }} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── Homepage (Streaming Dashboard) ── */
 function HomePage() {
-  const featured = {
-    title: "hiromart STREAMING",
-    subtitle: "Premium Entertainment",
-    description: "Experience the ultimate streaming platform with thousands of movies, live sports, and exclusive content. Your entertainment, your way.",
-    backdrop: "https://res.cloudinary.com/dkmdeqbof/image/upload/v1779451345/Gemini_Generated_Image_ekvkvnekvkvnekvk_znyrps.png",
-  };
+  const [banners, setBanners] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const categories = [
-    { title: "Trending Now", color: "#f5c518" },
-    { title: "Continue Watching", color: "#a855f7" },
-    { title: "African Cinema", color: "#3b82f6" },
-    { title: "Recommended For You", color: "#06b6d4" },
-    { title: "Action Movies", color: "#ec4899" },
-    { title: "Emotional Stories", color: "#22c55e" },
-  ];
+  useEffect(() => {
+    Promise.all([
+      fetch(`${API}/banners`).then(r => r.json()),
+      fetch(`${API}/movies`).then(r => r.json()),
+      fetch(`${API}/genres`).then(r => r.json()),
+    ])
+      .then(([bannersData, moviesData, genresData]) => {
+        setBanners(bannersData || []);
+        setMovies(moviesData || []);
+        setGenres(genresData || []);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
 
-  const movies = Array.from({ length: 12 }, (_, i) => ({
-    id: i,
-    title: `Movie ${i + 1}`,
-    image: `https://picsum.photos/seed/movie${i}/300/170`,
-    rating: (4 + Math.random()).toFixed(1),
-    year: 2024 - (i % 5),
-    quality: i % 3 === 0 ? "4K" : i % 3 === 1 ? "HD" : "Full HD",
-  }));
+  if (loading) {
+    return (
+      <div className="space-y-8 pb-10">
+        <SkeletonHero />
+        {Array.from({ length: 4 }, (_, i) => (
+          <div key={i} className="space-y-3">
+            <div className="h-6 rounded w-40" style={{ backgroundColor: "var(--border-color)" }} />
+            <div className="flex gap-3 overflow-x-auto pb-2">
+              {Array.from({ length: 6 }, (_, j) => (
+                <SkeletonCard key={j} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  const hero = banners?.[0];
+  const movieRows = genres?.slice(0, 6).map(genre => ({
+    genre,
+    movies: movies?.filter(m => {
+      const gIds = m.genre_ids || m.genres?.map(g => g.id || g) || [];
+      return gIds.includes(genre.id);
+    }) || [],
+  })) || [];
+
+  const hasMovies = movies?.length > 0;
+  const remainingMovies = hasMovies
+    ? [{ genre: { id: 0, name: "All Movies", color: "#f5c518" }, movies: movies.slice(0, 10) }]
+    : [];
 
   return (
     <div className="space-y-8 pb-10">
       {/* Hero Banner */}
-      <div className="relative rounded-2xl overflow-hidden min-h-[300px] lg:min-h-[420px] group"
-        style={{ background: `url(${featured.backdrop}) center/cover` }}>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0f] via-[#0a0a0f]/70 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-transparent to-transparent" />
-        <div className="relative z-10 p-6 lg:p-12 max-w-2xl flex flex-col justify-end min-h-[300px] lg:min-h-[420px]">
-          <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-full bg-[#f5c518] text-black w-fit mb-3">
-            {featured.subtitle}
-          </span>
-          <h1 className="text-3xl lg:text-5xl xl:text-6xl font-extrabold mb-3 leading-tight" style={{ color: "var(--text-primary)" }}>
-            {featured.title}
-          </h1>
-          <p className="text-sm lg:text-base mb-6 max-w-lg" style={{ color: "var(--text-secondary)" }}>
-            {featured.description}
-          </p>
-          <div className="flex items-center gap-3 flex-wrap">
-            <Link to="/shop" className="inline-flex items-center gap-2 bg-[#f5c518] text-black px-6 py-3 rounded-xl font-bold text-sm hover:bg-[#d4a800] transition-all shadow-lg shadow-[#f5c518]/25 group-hover:shadow-[#f5c518]/40">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              Watch Now
-            </Link>
-            <button className="inline-flex items-center gap-2 glass px-6 py-3 rounded-xl font-semibold text-sm hover:bg-[var(--bg-hover)] transition-all" style={{ color: "var(--text-primary)" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-              Add to List
-            </button>
+      {hero ? (
+        <Link to={hero.movie_id ? `/movie/${hero.movie_id}` : "/movies"} className="relative rounded-2xl overflow-hidden min-h-[300px] lg:min-h-[420px] group block"
+          style={{ background: `url(${hero.image || hero.backdrop || ""}) center/cover` }}>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0f] via-[#0a0a0f]/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-transparent to-transparent" />
+          <div className="relative z-10 p-6 lg:p-12 max-w-2xl flex flex-col justify-end min-h-[300px] lg:min-h-[420px]">
+            {hero.subtitle && (
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-full bg-[#f5c518] text-black w-fit mb-3">
+                {hero.subtitle}
+              </span>
+            )}
+            <h1 className="text-3xl lg:text-5xl xl:text-6xl font-extrabold mb-3 leading-tight" style={{ color: "var(--text-primary)" }}>
+              {hero.title || "AgasobanuyeFree Streaming"}
+            </h1>
+            {hero.description && (
+              <p className="text-sm lg:text-base mb-6 max-w-lg" style={{ color: "var(--text-secondary)" }}>
+                {hero.description}
+              </p>
+            )}
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="inline-flex items-center gap-2 bg-[#f5c518] text-black px-6 py-3 rounded-xl font-bold text-sm hover:bg-[#d4a800] transition-all shadow-lg shadow-[#f5c518]/25 group-hover:shadow-[#f5c518]/40">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Watch Now
+              </span>
+              <span className="inline-flex items-center gap-2 glass px-6 py-3 rounded-xl font-semibold text-sm" style={{ color: "var(--text-primary)" }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                Add to List
+              </span>
+            </div>
+          </div>
+        </Link>
+      ) : (
+        <div className="relative rounded-2xl overflow-hidden min-h-[300px] lg:min-h-[420px]"
+          style={{ background: "linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%)" }}>
+          <div className="relative z-10 p-6 lg:p-12 max-w-2xl flex flex-col justify-end min-h-[300px] lg:min-h-[420px]">
+            <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-full bg-[#f5c518] text-black w-fit mb-3">
+              Premium Entertainment
+            </span>
+            <h1 className="text-3xl lg:text-5xl xl:text-6xl font-extrabold mb-3 leading-tight" style={{ color: "var(--text-primary)" }}>
+              AgasobanuyeFree Streaming
+            </h1>
+            <p className="text-sm lg:text-base mb-6 max-w-lg" style={{ color: "var(--text-secondary)" }}>
+              Experience the ultimate streaming platform with thousands of movies, live sports, and exclusive content. Your entertainment, your way.
+            </p>
+            <div className="flex items-center gap-3 flex-wrap">
+              <Link to="/movies" className="inline-flex items-center gap-2 bg-[#f5c518] text-black px-6 py-3 rounded-xl font-bold text-sm hover:bg-[#d4a800] transition-all shadow-lg shadow-[#f5c518]/25">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Browse Movies
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Movie Rows */}
-      {categories.map((cat, ci) => (
-        <div key={ci} className="space-y-3">
+      {/* Movie Rows by Genre */}
+      {movieRows.map(({ genre, movies: genreMovies }) => {
+        if (!genreMovies?.length) return null;
+        const genreColor = genre.color || `hsl(${genre.id * 60}, 70%, 50%)`;
+        return (
+          <div key={genre.id} className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold flex items-center gap-2" style={{ color: "var(--text-primary)" }}>
+                <span className="w-1.5 h-5 rounded-full" style={{ backgroundColor: genreColor }} />
+                {genre.name}
+              </h2>
+              <Link to="/movies" className="text-xs font-semibold flex items-center gap-1 hover:underline" style={{ color: genreColor }}>
+                View All <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </Link>
+            </div>
+            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
+              {genreMovies.slice(0, 8).map((movie) => (
+                <Link key={movie.id} to={`/movie/${movie.id}`} className="group/card flex-shrink-0 w-[180px] lg:w-[200px] rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
+                  style={{ backgroundColor: "var(--bg-card)", boxShadow: "var(--shadow)" }}>
+                  <div className="relative aspect-video overflow-hidden">
+                    <img src={movie.poster || movie.image || `https://picsum.photos/seed/movie${movie.id}/300/170`} alt={movie.title} className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-110" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity" />
+                    {movie.quality && (
+                      <div className="absolute bottom-2 right-2 flex gap-1.5 opacity-0 group-hover/card:opacity-100 transition-all duration-300 translate-y-2 group-hover/card:translate-y-0">
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-[#f5c518] text-black font-bold">{movie.quality}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-3">
+                    <h3 className="text-sm font-semibold truncate" style={{ color: "var(--text-primary)" }}>{movie.title}</h3>
+                    <div className="flex items-center gap-2 mt-1">
+                      {movie.rating && <span className="text-xs text-[#f5c518] font-semibold">★ {movie.rating}</span>}
+                      {movie.year && <span className="text-xs" style={{ color: "var(--text-muted)" }}>{movie.year}</span>}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+
+      {/* All Movies row */}
+      {remainingMovies.map(({ genre, movies: genreMovies }) => (
+        <div key={genre.id} className="space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold flex items-center gap-2" style={{ color: "var(--text-primary)" }}>
-              <span className="w-1.5 h-5 rounded-full" style={{ backgroundColor: cat.color }} />
-              {cat.title}
+              <span className="w-1.5 h-5 rounded-full" style={{ backgroundColor: genre.color }} />
+              {genre.name}
             </h2>
-            <Link to="/shop" className="text-xs font-semibold flex items-center gap-1 hover:underline" style={{ color: cat.color }}>
+            <Link to="/movies" className="text-xs font-semibold flex items-center gap-1 hover:underline" style={{ color: genre.color }}>
               View All <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
             </Link>
           </div>
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
-            {movies.slice(0, 8).map((movie) => (
-              <Link key={movie.id} to="/shop" className="group/card flex-shrink-0 w-[180px] lg:w-[200px] rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
+            {genreMovies.slice(0, 8).map((movie) => (
+              <Link key={movie.id} to={`/movie/${movie.id}`} className="group/card flex-shrink-0 w-[180px] lg:w-[200px] rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
                 style={{ backgroundColor: "var(--bg-card)", boxShadow: "var(--shadow)" }}>
                 <div className="relative aspect-video overflow-hidden">
-                  <img src={movie.image} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-110"
-                    onError={(e) => { e.target.src = `https://picsum.photos/seed/fallback${movie.id}/300/170`; }} />
+                  <img src={movie.poster || movie.image || `https://picsum.photos/seed/movie${movie.id}/300/170`} alt={movie.title} className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-110" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity" />
-                  <div className="absolute bottom-2 right-2 flex gap-1.5 opacity-0 group-hover/card:opacity-100 transition-all duration-300 translate-y-2 group-hover/card:translate-y-0">
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-[#f5c518] text-black font-bold">{movie.quality}</span>
-                  </div>
+                  {movie.quality && (
+                    <div className="absolute bottom-2 right-2 flex gap-1.5 opacity-0 group-hover/card:opacity-100 transition-all duration-300 translate-y-2 group-hover/card:translate-y-0">
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-[#f5c518] text-black font-bold">{movie.quality}</span>
+                    </div>
+                  )}
                 </div>
                 <div className="p-3">
                   <h3 className="text-sm font-semibold truncate" style={{ color: "var(--text-primary)" }}>{movie.title}</h3>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-[#f5c518] font-semibold">★ {movie.rating}</span>
-                    <span className="text-xs" style={{ color: "var(--text-muted)" }}>{movie.year}</span>
+                    {movie.rating && <span className="text-xs text-[#f5c518] font-semibold">★ {movie.rating}</span>}
+                    {movie.year && <span className="text-xs" style={{ color: "var(--text-muted)" }}>{movie.year}</span>}
                   </div>
                 </div>
               </Link>
@@ -489,6 +615,57 @@ function HomePage() {
   );
 }
 
+/* ── Genre Listing Page ── */
+function GenreListingPage() {
+  const [genres, setGenres] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`${API}/genres`)
+      .then(r => r.json())
+      .then(data => setGenres(data || []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  const genreColors = ["#f5c518", "#a855f7", "#3b82f6", "#06b6d4", "#ec4899", "#22c55e", "#f97316", "#ef4444"];
+
+  return (
+    <div className="space-y-6 pb-10">
+      <div>
+        <h1 className="text-2xl lg:text-3xl font-extrabold" style={{ color: "var(--text-primary)" }}>Browse Genres</h1>
+        <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>Explore movies by genre</p>
+      </div>
+      {loading ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {Array.from({ length: 10 }, (_, i) => (
+            <div key={i} className="rounded-xl p-6 animate-pulse" style={{ backgroundColor: "var(--bg-card)" }}>
+              <div className="h-4 rounded w-3/4 mx-auto" style={{ backgroundColor: "var(--border-color)" }} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {genres.map((genre, i) => (
+            <Link
+              key={genre.id}
+              to={`/movies?genre=${genre.id}`}
+              className="rounded-xl p-6 text-center font-bold text-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              style={{
+                backgroundColor: genreColors[i % genreColors.length] + "15",
+                color: genreColors[i % genreColors.length],
+                border: `1px solid ${genreColors[i % genreColors.length]}30`,
+              }}
+            >
+              {genre.name}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function StripeWrapper({ children }) {
   const [stripePromise, setStripePromise] = useState(null);
 
@@ -518,42 +695,26 @@ export default function App() {
         <WishlistProvider>
         <CompareProvider>
         <Routes>
-          <Route path="/" element={<StreamingLayout seo={<SEO title="Home - hiromart
-
- Streaming" description="Ultimate African streaming experience - movies, live sports, and exclusive content" keywords="streaming, movies, live sports, African cinema" />}><HomePage /></StreamingLayout>} />
-          <Route path="/login" element={<StreamingLayout seo={<SEO title="Login - hiromart
-
- Streaming" />}><LoginPage /></StreamingLayout>} />
-          <Route path="/signup" element={<StreamingLayout seo={<SEO title="Create Account - hiromart
-
- Streaming" />}><SignupPage /></StreamingLayout>} />
+          <Route path="/" element={<StreamingLayout seo={<SEO title="Home - AgasobanuyeFree Streaming" description="Ultimate African streaming experience - movies, live sports, and exclusive content" keywords="streaming, movies, live sports, African cinema" />}><HomePage /></StreamingLayout>} />
+          <Route path="/login" element={<StreamingLayout seo={<SEO title="Login - AgasobanuyeFree Streaming" />}><LoginPage /></StreamingLayout>} />
+          <Route path="/signup" element={<StreamingLayout seo={<SEO title="Create Account - AgasobanuyeFree Streaming" />}><SignupPage /></StreamingLayout>} />
           <Route path="/forgot-password" element={<StreamingLayout seo={<SEO title="Forgot Password" />}><ForgotPasswordPage /></StreamingLayout>} />
           <Route path="/verify-otp" element={<StreamingLayout seo={<SEO title="Verify OTP" />}><OTPVerifyPage /></StreamingLayout>} />
           <Route path="/reset-password/:token" element={<StreamingLayout seo={<SEO title="Reset Password" />}><ResetPasswordPage /></StreamingLayout>} />
           <Route path="/reset-password" element={<StreamingLayout seo={<SEO title="Reset Password" />}><ResetPasswordPage /></StreamingLayout>} />
-          <Route path="/cart" element={<StreamingLayout seo={<SEO title="Cart - hiromart
-
- Streaming" />}><CartPage /></StreamingLayout>} />
+          <Route path="/cart" element={<StreamingLayout seo={<SEO title="Cart - AgasobanuyeFree Streaming" />}><CartPage /></StreamingLayout>} />
           <Route path="/product/:id" element={<StreamingLayout><ProductPage /></StreamingLayout>} />
-          <Route path="/wishlist" element={<StreamingLayout seo={<SEO title="My List - hiromart
-
- Streaming" />}><WishlistPage /></StreamingLayout>} />
+          <Route path="/wishlist" element={<StreamingLayout seo={<SEO title="My List - AgasobanuyeFree Streaming" />}><WishlistPage /></StreamingLayout>} />
           <Route path="/compare" element={<StreamingLayout seo={<SEO title="Compare" />}><ComparePage /></StreamingLayout>} />
           <Route path="/shop" element={<StreamingLayout><ShopPage /></StreamingLayout>} />
           <Route path="/checkout" element={<StreamingLayout seo={<SEO title="Checkout" />}><StripeWrapper><CheckoutPage /></StripeWrapper></StreamingLayout>} />
-          <Route path="/categories" element={<StreamingLayout seo={<SEO title="Browse - hiromart
-
- Streaming" />}><CategoriesPage /></StreamingLayout>} />
+          <Route path="/categories" element={<StreamingLayout seo={<SEO title="Browse - AgasobanuyeFree Streaming" />}><CategoriesPage /></StreamingLayout>} />
           <Route path="/category/:name" element={<StreamingLayout><CategoryPage /></StreamingLayout>} />
           <Route path="/orders" element={<StreamingLayout seo={<SEO title="My Orders" />}><OrdersPage /></StreamingLayout>} />
           <Route path="/order-detail/:id" element={<StreamingLayout seo={<SEO title="Order Details" />}><OrderTrackingPage /></StreamingLayout>} />
-          <Route path="/profile" element={<StreamingLayout seo={<SEO title="My Profile - hiromart
-
- Streaming" />}><ProfilePage /></StreamingLayout>} />
+          <Route path="/profile" element={<StreamingLayout seo={<SEO title="My Profile - AgasobanuyeFree Streaming" />}><ProfilePage /></StreamingLayout>} />
           <Route path="/help" element={<StreamingLayout seo={<SEO title="Help Center" />}><HelpCenterPage /></StreamingLayout>} />
-          <Route path="/about" element={<StreamingLayout seo={<SEO title="About - hiromart
-
- Streaming" />}><AboutPage /></StreamingLayout>} />
+          <Route path="/about" element={<StreamingLayout seo={<SEO title="About - AgasobanuyeFree Streaming" />}><AboutPage /></StreamingLayout>} />
           <Route path="/contact" element={<StreamingLayout seo={<SEO title="Contact Us" />}><ContactPage /></StreamingLayout>} />
           <Route path="/terms" element={<StreamingLayout seo={<SEO title="Terms & Conditions" />}><TermsPage /></StreamingLayout>} />
           <Route path="/secure-payment" element={<StreamingLayout seo={<SEO title="Secure Payment" />}><SecurePaymentPage /></StreamingLayout>} />
@@ -566,6 +727,10 @@ export default function App() {
           <Route path="/prices-drop" element={<StreamingLayout seo={<SEO title="Price Drops" />}><PricesDropPage /></StreamingLayout>} />
           <Route path="/new-products" element={<StreamingLayout seo={<SEO title="New Releases" />}><NewProductsPage /></StreamingLayout>} />
           <Route path="/best-sellers" element={<StreamingLayout seo={<SEO title="Trending" />}><BestSellersPage /></StreamingLayout>} />
+          <Route path="/movies" element={<StreamingLayout seo={<SEO title="Movies - AgasobanuyeFree Streaming" />}><ShopPage /></StreamingLayout>} />
+          <Route path="/movie/:id" element={<StreamingLayout seo={<SEO title="Movie - AgasobanuyeFree Streaming" />}><MoviePage /></StreamingLayout>} />
+          <Route path="/genres" element={<StreamingLayout seo={<SEO title="Genres - AgasobanuyeFree Streaming" />}><GenreListingPage /></StreamingLayout>} />
+          <Route path="/favorites" element={<Navigate to="/wishlist" replace />} />
           <Route path="*" element={<StreamingLayout><NotFoundPage /></StreamingLayout>} />
         </Routes>
         </CompareProvider>
