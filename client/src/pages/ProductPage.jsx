@@ -15,6 +15,19 @@ export default function ProductPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: product, loading } = useFetch(`/products/${id}`, [id]);
+
+  useEffect(() => {
+    if (!product) return;
+    try {
+      const raw = localStorage.getItem("hiromart_recently_viewed");
+      let viewed = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(viewed)) viewed = [];
+      viewed = viewed.filter(v => v.id !== product.id && v._id !== product._id);
+      viewed.unshift({ id: product.id, _id: product._id, name: product.name, image: product.image, price: product.price });
+      if (viewed.length > 20) viewed = viewed.slice(0, 20);
+      localStorage.setItem("hiromart_recently_viewed", JSON.stringify(viewed));
+    } catch {}
+  }, [product]);
   const [reviews, setReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(true);
   const { addToCart } = useCart();
@@ -23,6 +36,11 @@ export default function ProductPage() {
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewError, setReviewError] = useState("");
   const [reviewSuccess, setReviewSuccess] = useState(false);
+  const [questions, setQuestions] = useState([]);
+  const [questionsLoading, setQuestionsLoading] = useState(true);
+  const [questionForm, setQuestionForm] = useState("");
+  const [questionSubmitting, setQuestionSubmitting] = useState(false);
+  const [questionSuccess, setQuestionSuccess] = useState(false);
 
   useEffect(() => {
     if (product) {
@@ -44,6 +62,26 @@ export default function ProductPage() {
     }
   }, [product, reviewSuccess]);
 
+  useEffect(() => {
+    if (product) {
+      const loadQuestions = async () => {
+        setQuestionsLoading(true);
+        try {
+          const res = await fetch(`${API}/questions/product/${product._id || product.id}`);
+          if (res.ok) {
+            const data = await res.json();
+            setQuestions(data);
+          }
+        } catch (err) {
+          console.error("Failed to load questions:", err);
+        } finally {
+          setQuestionsLoading(false);
+        }
+      };
+      loadQuestions();
+    }
+  }, [product, questionSuccess]);
+
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     setReviewSubmitting(true);
@@ -63,6 +101,24 @@ export default function ProductPage() {
     } finally {
       setReviewSubmitting(false);
     }
+  };
+
+  const handleQuestionSubmit = async (e) => {
+    e.preventDefault();
+    if (!questionForm.trim()) return;
+    setQuestionSubmitting(true);
+    setQuestionSuccess(false);
+    try {
+      const token = localStorage.getItem("classyshop_token");
+      const res = await fetch(`${API}/questions`, {
+        method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ productId: product._id || product.id, question: questionForm }),
+      });
+      if (!res.ok) { const d = await res.json(); alert(d.error || "Failed to submit question"); return; }
+      setQuestionSuccess(true);
+      setQuestionForm("");
+    } catch { alert("Failed to submit question"); }
+    setQuestionSubmitting(false);
   };
 
   const [qty, setQty] = useState(1);
@@ -92,10 +148,16 @@ export default function ProductPage() {
     <div className="bg-white min-h-screen py-6">
       <SEO
         title={product.name}
-        description={product.description || `Buy ${product.name} at Hiromart. ${product.brand ? `Brand: ${product.brand}. ` : ""}Available at the best price in Rwanda.`}
+        description={product.description || `Buy ${product.name} at hiromart
+
+. ${product.brand ? `Brand: ${product.brand}. ` : ""}Available at the best price in Rwanda.`}
         image={allImages[0]}
-        url={`https://hiromart-client.netlify.app/product/${product._id || product.id}`}
-        keywords={`${product.name}, ${product.brand || ""}, ${product.category || ""}, buy online Rwanda, Hiromart`.replace(/\s+/g, ' ').trim()}
+        url={`https://hiromart
+
+-client.netlify.app/product/${product._id || product.id}`}
+        keywords={`${product.name}, ${product.brand || ""}, ${product.category || ""}, buy online Rwanda, hiromart
+
+`.replace(/\s+/g, ' ').trim()}
       />
       <div className="max-w-[1430px] mx-auto px-4">
         {/* Breadcrumb */}
@@ -276,14 +338,14 @@ export default function ProductPage() {
         <div className="mb-12">
           <div className="border-b border-gray-200 mb-6">
             <div className="flex gap-0">
-              {["description", "reviews"].map((tab) => (
+              {["description", "reviews", "questions"].map((tab) => (
                 <button key={tab} onClick={() => setActiveTab(tab)} className={`px-6 py-3 text-sm font-medium border-b-2 transition ${activeTab === tab ? "border-primary text-primary" : "border-transparent text-gray-500 hover:text-gray-700"}`}>
-                  {tab === "description" ? "Description" : `Reviews (${reviewsLoading ? product.reviews : reviews.length})`}
+                  {tab === "description" ? "Description" : tab === "reviews" ? `Reviews (${reviewsLoading ? product.reviews : reviews.length})` : `Q&A (${questions.length})`}
                 </button>
               ))}
             </div>
           </div>
-          <div className="text-sm text-gray-600 leading-relaxed max-w-4xl">
+          <div className="text-sm leading-relaxed max-w-4xl" style={{ color: "var(--text-secondary)" }}>
             {activeTab === "description" ? (
               <div className="space-y-4">
                 <p>Experience premium quality with the {product.name} from {product.brand}. Crafted with precision and care, this product is designed to meet the highest standards of comfort and durability.</p>
@@ -296,58 +358,56 @@ export default function ProductPage() {
                   <li>Satisfaction guaranteed</li>
                 </ul>
               </div>
-            ) : (
+            ) : activeTab === "reviews" ? (
               <div>
-                {/* Write a Review */}
                 {isLoggedIn && (
-                  <form onSubmit={handleReviewSubmit} className="mb-8 p-5 bg-gray-50 rounded-xl border border-gray-200">
-                    <h4 className="text-sm font-bold text-dark mb-3">Write a Review</h4>
+                  <form onSubmit={handleReviewSubmit} className="mb-8 p-5 rounded-xl border" style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-color)" }}>
+                    <h4 className="text-sm font-bold mb-3" style={{ color: "var(--text-primary)" }}>Write a Review</h4>
                     {reviewError && <p className="text-red-500 text-xs mb-3">{reviewError}</p>}
                     {reviewSuccess && <p className="text-green-600 text-xs mb-3">Review submitted successfully!</p>}
                     <div className="flex items-center gap-1 mb-3">
-                      <span className="text-xs text-gray-500 mr-2">Rating:</span>
+                      <span className="text-xs mr-2" style={{ color: "var(--text-muted)" }}>Rating:</span>
                       {[1,2,3,4,5].map(s => (
-                        <button key={s} type="button" onClick={() => setReviewForm(f => ({ ...f, rating: s }))} className={`text-lg ${s <= reviewForm.rating ? 'text-yellow-400' : 'text-gray-300'}`}><FiStar fill={s <= reviewForm.rating ? 'currentColor' : 'none'} /></button>
+                        <button key={s} type="button" onClick={() => setReviewForm(f => ({ ...f, rating: s }))} className={`text-lg ${s <= reviewForm.rating ? 'text-yellow-400' : 'text-gray-600'}`}><FiStar fill={s <= reviewForm.rating ? 'currentColor' : 'none'} /></button>
                       ))}
                     </div>
-                    <textarea value={reviewForm.comment} onChange={e => setReviewForm(f => ({ ...f, comment: e.target.value }))} placeholder="Share your thoughts about this product..." rows={3} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary resize-none mb-3" />
-                    <button type="submit" disabled={reviewSubmitting} className="bg-primary text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-primary-dark transition disabled:opacity-50">{reviewSubmitting ? 'Submitting...' : 'Submit Review'}</button>
+                    <textarea value={reviewForm.comment} onChange={e => setReviewForm(f => ({ ...f, comment: e.target.value }))} placeholder="Share your thoughts about this product..." rows={3} className="w-full border rounded-lg px-3 py-2 text-sm outline-none focus:border-primary resize-none mb-3" style={{ backgroundColor: "var(--bg-input)", borderColor: "var(--border-color)", color: "var(--text-primary)" }} />
+                    <button type="submit" disabled={reviewSubmitting} className="text-black px-5 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition disabled:opacity-50" style={{ backgroundColor: "#f5c518" }}>{reviewSubmitting ? 'Submitting...' : 'Submit Review'}</button>
                   </form>
                 )}
-                {/* Reviews List */}
                 {reviewsLoading ? (
                   <div className="space-y-5">
                     {[...Array(3)].map((_, i) => (
-                      <div key={i} className="border-b border-gray-100 pb-4 animate-pulse">
+                      <div key={i} className="border-b pb-4 animate-pulse" style={{ borderColor: "var(--border-color)" }}>
                         <div className="flex items-center gap-3 mb-1">
-                          <div className="w-8 h-8 rounded-full bg-gray-200" />
-                          <div><div className="h-3 w-24 bg-gray-200 rounded" /><div className="h-2 w-16 bg-gray-100 rounded mt-1" /></div>
+                          <div className="w-8 h-8 rounded-full skeleton" />
+                          <div><div className="h-3 w-24 skeleton rounded" /><div className="h-2 w-16 skeleton rounded mt-1" /></div>
                         </div>
-                        <div className="h-3 w-3/4 bg-gray-100 rounded ml-11" />
+                        <div className="h-3 w-3/4 skeleton rounded ml-11" />
                       </div>
                     ))}
                   </div>
                 ) : reviews.length === 0 ? (
                   <div className="text-center py-8">
-                    <div className="flex justify-center gap-1 text-2xl text-gray-300 mb-2">
-                      {[1,2,3,4,5].map(s => <FiStar key={s} className="text-gray-200" />)}
+                    <div className="flex justify-center gap-1 text-2xl mb-2" style={{ color: "var(--text-muted)" }}>
+                      {[1,2,3,4,5].map(s => <FiStar key={s} />)}
                     </div>
-                    <p className="text-sm text-gray-500">No reviews yet. Be the first to review!</p>
+                    <p className="text-sm" style={{ color: "var(--text-muted)" }}>No reviews yet. Be the first to review!</p>
                     {!isLoggedIn && (
-                      <Link to="/login" className="text-primary text-sm font-medium hover:underline mt-1 inline-block">Sign in to write a review</Link>
+                      <Link to="/login" className="text-sm font-medium hover:underline mt-1 inline-block" style={{ color: "#f5c518" }}>Sign in to write a review</Link>
                     )}
                   </div>
                 ) : (
                   <div className="space-y-5">
                     {reviews.map((review, index) => (
-                      <div key={index} className="border-b border-gray-100 pb-4">
+                      <div key={index} className="border-b pb-4" style={{ borderColor: "var(--border-color)" }}>
                         <div className="flex items-center gap-3 mb-1">
-                          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600">
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style={{ backgroundColor: "var(--bg-input)", color: "var(--text-secondary)" }}>
                             {review.user?.name?.charAt(0) || 'U'}
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-dark">{review.user?.name || 'Anonymous'}</p>
-                            <p className="text-xs text-gray-400">{new Date(review.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                            <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>{review.user?.name || 'Anonymous'}</p>
+                            <p className="text-xs" style={{ color: "var(--text-muted)" }}>{new Date(review.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                           </div>
                           <div className="flex text-yellow-400 text-xs ml-auto">
                             {Array.from({ length: 5 }).map((_, j) => (
@@ -355,7 +415,7 @@ export default function ProductPage() {
                             ))}
                           </div>
                         </div>
-                        <p className="text-sm text-gray-600 ml-11">{review.comment || 'No comment provided'}</p>
+                        <p className="text-sm ml-11" style={{ color: "var(--text-secondary)" }}>{review.comment || 'No comment provided'}</p>
                         {review.images && review.images.length > 0 && (
                           <div className="mt-2 flex flex-wrap gap-2 ml-11">
                             {review.images.map((img, imgIndex) => (
@@ -367,21 +427,48 @@ export default function ProductPage() {
                     ))}
                   </div>
                 )}
-                {/* Ask about this product */}
-                <div className="mt-8 p-5 bg-green-50 rounded-xl border border-green-200">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center shrink-0">
-                      <FaWhatsapp size={24} className="text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-sm font-bold text-dark">Ask About This Product</h4>
-                      <p className="text-xs text-gray-500 mt-0.5">Have a question? Get in touch with us on WhatsApp for quick assistance.</p>
-                    </div>
-                    <a href="https://wa.me/250798388890?text=Hi%2C%20I%20have%20a%20question%20about%20${encodeURIComponent(product.name)}" target="_blank" rel="noopener noreferrer" className="bg-green-500 text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-green-600 transition shrink-0 flex items-center gap-2 shadow-sm">
-                      <FaWhatsapp size={16} /> Ask Now
-                    </a>
+              </div>
+            ) : (
+              <div>
+                {isLoggedIn && (
+                  <form onSubmit={handleQuestionSubmit} className="mb-8 p-5 rounded-xl border" style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-color)" }}>
+                    <h4 className="text-sm font-bold mb-3" style={{ color: "var(--text-primary)" }}>Ask a Question</h4>
+                    {questionSuccess && <p className="text-green-600 text-xs mb-3">Question submitted! Admin will answer soon.</p>}
+                    <textarea value={questionForm} onChange={e => setQuestionForm(e.target.value)} placeholder="Have a question about this product? Ask here..." rows={3} className="w-full border rounded-lg px-3 py-2 text-sm outline-none focus:border-primary resize-none mb-3" style={{ backgroundColor: "var(--bg-input)", borderColor: "var(--border-color)", color: "var(--text-primary)" }} />
+                    <button type="submit" disabled={questionSubmitting} className="text-black px-5 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition disabled:opacity-50" style={{ backgroundColor: "#f5c518" }}>{questionSubmitting ? 'Submitting...' : 'Submit Question'}</button>
+                  </form>
+                )}
+                {questionsLoading ? (
+                  <div className="space-y-4">
+                    {[...Array(2)].map((_, i) => (
+                      <div key={i} className="border-b pb-4 animate-pulse" style={{ borderColor: "var(--border-color)" }}><div className="h-3 w-3/4 skeleton rounded" /><div className="h-2 w-1/2 skeleton rounded mt-2" /></div>
+                    ))}
                   </div>
-                </div>
+                ) : questions.length === 0 ? (
+                  <div className="text-center py-8">
+                    <svg className="mx-auto mb-3" width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="var(--text-muted)"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <p className="text-sm" style={{ color: "var(--text-muted)" }}>No questions yet. Be the first to ask!</p>
+                  </div>
+                ) : (
+                  questions.map((q, i) => (
+                    <div key={i} className="border-b pb-4 mb-4" style={{ borderColor: "var(--border-color)" }}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold" style={{ backgroundColor: "var(--bg-input)", color: "var(--text-secondary)" }}>
+                          {q.user?.name?.charAt(0) || 'U'}
+                        </div>
+                        <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>{q.user?.name || 'Anonymous'}</p>
+                        <p className="text-xs ml-auto" style={{ color: "var(--text-muted)" }}>{new Date(q.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+                      </div>
+                      <p className="text-sm ml-8" style={{ color: "var(--text-secondary)" }}>{q.text}</p>
+                      {q.answer && (
+                        <div className="ml-8 mt-2 p-3 rounded-lg border" style={{ backgroundColor: "rgba(34,197,94,0.1)", borderColor: "rgba(34,197,94,0.2)" }}>
+                          <p className="text-xs font-medium mb-1" style={{ color: "#22C55E" }}>Admin Response</p>
+                          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>{q.answer}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))
+                )}
               </div>
             )}
           </div>

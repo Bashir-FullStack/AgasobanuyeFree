@@ -9,10 +9,10 @@ const stats = [
 ];
 
 const team = [
-  { name: "Sharif Hakorimana", role: "Founder & CEO", img: "https://picsum.photos/seed/team1/200/200" },
-  { name: "Alice Mukamana", role: "Head of Operations", img: "https://picsum.photos/seed/team2/200/200" },
-  { name: "David Niyonzima", role: "Lead Developer", img: "https://picsum.photos/seed/team3/200/200" },
-  { name: "Grace Uwimana", role: "Customer Success", img: "https://picsum.photos/seed/team4/200/200" },
+  { name: "Bashir Hagenimana", role: "Founder & CEO", img: "https://picsum.photos/seed/team1/200/200" },
+  { name: "Baraka Bonheur", role: "Head of Operations", img: "https://picsum.photos/seed/team2/200/200" },
+  { name: "Hamed Hussein", role: "System Developer", img: "https://picsum.photos/seed/team3/200/200" },
+  { name: "Grace Uwimana", role: "Customer Success", img: "https://picsum.photos/seed/team1/200/200" },
 ];
 
 const values = [
@@ -28,9 +28,13 @@ export default function AboutPage() {
 
       <div className="bg-gradient-to-r from-primary/10 to-primary/5 border-b border-gray-100">
         <div className="max-w-[1000px] mx-auto px-4 py-16 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-dark mb-4">About Hiromart</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-dark mb-4">About hiromart
+
+</h1>
           <p className="text-gray-500 text-sm max-w-2xl mx-auto leading-relaxed">
-            Hiromart is your trusted online marketplace for quality fashion, electronics, home goods, and more. 
+            hiromart
+
+ is your trusted online marketplace for quality fashion, electronics, home goods, and more. 
             We connect customers with premium products at unbeatable prices, delivered right to your door.
           </p>
         </div>
@@ -50,7 +54,9 @@ export default function AboutPage() {
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 mb-12">
           <h2 className="text-xl font-bold text-dark mb-4">Our Story</h2>
           <div className="space-y-3 text-sm text-gray-600 leading-relaxed">
-            <p>Hiromart started in 2018 with a simple mission: make quality products accessible to everyone in Rwanda. What began as a small online store has grown into a trusted marketplace serving thousands of customers nationwide.</p>
+            <p>hiromart
+
+ started in 2018 with a simple mission: make quality products accessible to everyone in Rwanda. What began as a small online store has grown into a trusted marketplace serving thousands of customers nationwide.</p>
             <p>We partner with top brands and local artisans to bring you a curated selection of fashion, electronics, home essentials, and more. Every product is vetted for quality, and every order is handled with care.</p>
             <p>Our team is passionate about creating a seamless shopping experience — from browsing to checkout to delivery. We believe great service is just as important as great products.</p>
           </div>

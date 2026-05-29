@@ -11,7 +11,7 @@ const autoReplies = [
 export default function LiveChat() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { from: "bot", text: "Hi there! Welcome to Hiromart. How can we assist you today?" },
+    { from: "bot", text: "Hi there! Welcome to hiromart. How can we assist you today?" },
   ]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
@@ -44,7 +44,9 @@ export default function LiveChat() {
           <div className="bg-primary text-white px-4 py-3 flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold">H</div>
             <div>
-              <p className="text-sm font-semibold">Hiromart Chat</p>
+              <p className="text-sm font-semibold">hiromart
+
+ Chat</p>
               <p className="text-[10px] text-white/70">We typically reply in minutes</p>
             </div>
           </div>

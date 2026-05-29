@@ -24,7 +24,7 @@ function formatOrder(o) {
     deliveryStatus: o.delivery?.status || "Pending",
     deliveryProvince: o.delivery?.province || null,
     deliverySector: o.delivery?.sector || null,
-    address: typeof o.address === "object" ? [o.address.firstName, o.address.lastName].filter(Boolean).join(" ") + ", " + (o.address.address || "") : o.address,
+    address: o.address && typeof o.address === "object" ? [o.address.firstName, o.address.lastName].filter(Boolean).join(" ") + ", " + (o.address.address || "") : o.address,
     date: o.createdAt ? new Date(o.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "",
     eta: o.createdAt ? new Date(Date.parse(o.createdAt) + 7 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "",
     items: o.items ? o.items.length : 0,

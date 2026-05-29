@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import i18n from "./i18n";
 
 const languages = {
   en: { name: "English", native: "English", flag: "🇬🇧", dir: "ltr" },
@@ -6,47 +7,51 @@ const languages = {
   rw: { name: "Kinyarwanda", native: "Kinyarwanda", flag: "🇷🇼", dir: "ltr" },
 };
 
-import en from "./en.json";
-import fr from "./fr.json";
-import rw from "./rw.json";
-
-const allTranslations = { en, fr, rw };
-
 const TranslationContext = createContext();
 
+function getLang() {
+  try {
+    const raw = i18n?.language;
+    if (!raw) return "en";
+    if (raw.startsWith("fr")) return "fr";
+    if (raw.startsWith("rw")) return "rw";
+    return "en";
+  } catch {
+    return "en";
+  }
+}
+
 export function TranslationProvider({ children }) {
-  const [lang, setLangState] = useState(() => {
-    try { return localStorage.getItem("hiromart_lang") || "en"; }
-    catch { return "en"; }
-  });
-
-  const flat = useMemo(() => {
-    const f = {};
-    for (const l of Object.keys(allTranslations)) {
-      f[l] = allTranslations[l];
-    }
-    return f;
-  }, []);
-
-  const setLang = (l) => {
-    setLangState(l);
-    try { localStorage.setItem("hiromart_lang", l); } catch {}
-    try { document.documentElement.lang = l; } catch {}
-  };
+  const [, forceUpdate] = useState(0);
 
   useEffect(() => {
-    try { document.documentElement.lang = lang; } catch {}
-  }, [lang]);
-
-  const t = (key, fallback) => {
+    const handle = () => forceUpdate((n) => n + 1);
     try {
-      const val = flat[lang]?.[key];
-      if (val !== undefined) return val;
-      const enVal = flat.en?.[key];
-      if (enVal !== undefined) return enVal;
+      i18n?.on("languageChanged", handle);
+      return () => i18n?.off("languageChanged", handle);
+    } catch {
+      return;
+    }
+  }, []);
+
+  const lang = getLang();
+
+  const setLang = useCallback((l) => {
+    try {
+      i18n?.changeLanguage(l);
+      document.documentElement.lang = l;
     } catch {}
-    return fallback || key;
-  };
+  }, []);
+
+  const t = useCallback((key, fallback) => {
+    try {
+      if (!i18n?.t) return fallback ?? key;
+      const val = i18n.t(key);
+      return val !== key ? val : (fallback ?? key);
+    } catch {
+      return fallback ?? key;
+    }
+  }, []);
 
   const ctx = { lang, setLang, t, languages, current: languages[lang] || languages.en };
 

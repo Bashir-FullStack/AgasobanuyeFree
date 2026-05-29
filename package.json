@@ -1,11 +1,12 @@
 {
-  "name": "hiromarrt",
+  "name": "agasobanuyefree",
   "private": true,
   "version": "1.0.0",
-  "description": "Hiromart - Full e-commerce platform",
+  "description": "AgasobanuyeFree - Movie/TV Streaming Platform",
   "scripts": {
     "dev:client": "cd client && npm run dev",
     "dev:admin": "cd admin && npm run dev",
+    "dev:api": "cd backend && npm run dev",
     "build:client": "cd client && npm run build",
     "build:admin": "cd admin && npm run build",
     "install:all": "cd client && npm install && cd ../admin && npm install"

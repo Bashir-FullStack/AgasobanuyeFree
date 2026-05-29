@@ -161,15 +161,19 @@ export default function ShopPage() {
 
   const shopTitle = urlSearch ? `Search: ${urlSearch}` : "Shop All Products";
   const shopDesc = urlSearch
-    ? `Search results for "${urlSearch}" on Hiromart. Find the best products in Rwanda.`
-    : "Browse our full catalog of products available on Hiromart. Shop fashion, electronics, accessories and more with fast delivery across Kigali.";
+    ? `Search results for "${urlSearch}" on hiromart
+
+. Find the best products in Rwanda.`
+    : "Browse our full catalog of products available on hiromart. Shop fashion, electronics, accessories and more with fast delivery across Kigali.";
 
   return (
     <div className="bg-gray-50 min-h-screen">
       <SEO
         title={shopTitle}
         description={shopDesc}
-        keywords={`${urlSearch ? `${urlSearch}, ` : ""}shop online Rwanda, buy products Kigali, Hiromart, ecommerce Rwanda`}
+        keywords={`${urlSearch ? `${urlSearch}, ` : ""}shop online Rwanda, buy products Kigali, hiromart
+
+, ecommerce Rwanda`}
       />
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-[1430px] mx-auto px-4 py-4">

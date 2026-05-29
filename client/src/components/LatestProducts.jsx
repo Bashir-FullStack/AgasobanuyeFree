@@ -5,7 +5,8 @@ import ProductCard from "./ProductCard";
 import { ProductGridSkeleton } from "./Skeletons";
 
 export default function LatestProducts() {
-  const { data: products, loading } = useFetch("/products?limit=10");
+  const { data, loading } = useFetch("/products?limit=10");
+  const products = Array.isArray(data) ? data : data?.products || [];
 
   return (
     <section className="mb-14">
@@ -18,14 +19,14 @@ export default function LatestProducts() {
           <>
             <div className="md:hidden -mx-4 px-4">
               <Swiper slidesPerView={2} spaceBetween={10}>
-                {(products || []).slice(0, 10).map((p) => (
+                {products.slice(0, 10).map((p) => (
                   <SwiperSlide key={p.id}><ProductCard product={p} /></SwiperSlide>
                 ))}
               </Swiper>
             </div>
             <div className="hidden md:block">
               <div className="grid grid-cols-3 lg:grid-cols-5 gap-3">
-                {(products || []).slice(0, 10).map((p) => (
+                {products.slice(0, 10).map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
               </div>

@@ -36,6 +36,16 @@
   "common.optional": "optional",
   "common.required": "required",
 
+  "cookie.title": "Cookies & Privacy",
+  "cookie.description": "We use cookies to enhance your experience. By accepting, you consent to all cookies.",
+  "cookie.accept": "Accept All",
+  "cookie.reject": "Reject",
+
+  "topbar.followUs": "Follow us:",
+  "topbar.promo": "Get up to 50% off new season styles, limited time only",
+  "topbar.helpCenter": "Help Center",
+  "topbar.currency": "FRw",
+
   "nav.home": "Home",
   "nav.shop": "Shop",
   "nav.categories": "Categories",

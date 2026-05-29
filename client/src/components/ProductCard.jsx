@@ -8,6 +8,7 @@ import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { useCompare } from "../context/CompareContext";
 import { useState } from "react";
+import QuickViewModal from "./QuickViewModal";
 
 export default function ProductCard({ product, showTimer }) {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ export default function ProductCard({ product, showTimer }) {
   const [qsQty, setQsQty] = useState(1);
   const [qsSize, setQsSize] = useState(null);
   const [qsColor, setQsColor] = useState(null);
+  const [quickView, setQuickView] = useState(false);
 
   const sizes = product.sizes?.length ? product.sizes : [];
   const colors = product.colors?.length ? product.colors : [];
@@ -42,7 +44,7 @@ export default function ProductCard({ product, showTimer }) {
         <div className="absolute bottom-3 right-3 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-200">
           <button onClick={() => toggleWish(product)} className={`bg-white shadow-lg p-2 rounded-xl transition ${inWishlist(product.id) ? "text-red-500 shadow-red-500/20" : "text-gray-500 hover:text-primary hover:shadow-primary/20"}`} title="Add to Wishlist"><FiHeart size={16} /></button>
           <button onClick={() => toggleCompare(product)} className={`bg-white shadow-lg p-2 rounded-xl transition ${inCompare(product.id) ? "text-blue-500 shadow-blue-500/20" : "text-gray-500 hover:text-primary hover:shadow-primary/20"}`} title="Add to Compare"><FiRefreshCw size={16} /></button>
-          <Link to={`/product/${product.id}`} className="bg-white shadow-lg p-2 rounded-xl text-gray-500 hover:text-primary hover:shadow-primary/20 transition" title="Quick View"><BsEye size={16} /></Link>
+          <button onClick={() => setQuickView(true)} className="bg-white shadow-lg p-2 rounded-xl text-gray-500 hover:text-primary hover:shadow-primary/20 transition" title="Quick View"><BsEye size={16} /></button>
         </div>
       </div>
       <div className="p-3.5 flex flex-col flex-1">
@@ -67,6 +69,7 @@ export default function ProductCard({ product, showTimer }) {
         )}
       </div>
 
+      {quickView && <QuickViewModal product={product} onClose={() => setQuickView(false)} />}
       {/* Quick Shop Modal */}
       {quickShop && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">

@@ -82,7 +82,7 @@ export default function OrderTrackingPage() {
 
                 {/* Tracking Timeline */}
                 <div className="relative">
-                  {tracking.events.map((e, i) => (
+                  {(tracking.events || []).map((e, i) => (
                     <div key={i} className="flex items-start gap-4 pb-6 last:pb-0 relative">
                       <div className="flex flex-col items-center">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center ${e.done ? "bg-green-50" : "bg-gray-100"}`}>

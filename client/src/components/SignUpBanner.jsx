@@ -67,7 +67,9 @@ export default function SignUpBanner() {
 
         <div className="flex-1 p-6 md:p-10 flex flex-col justify-center">
           <div className="max-w-md mx-auto md:mx-0 w-full">
-            <span className="inline-block text-[11px] font-semibold text-green-600 uppercase tracking-[0.2em] mb-2">Welcome to Hiromart</span>
+            <span className="inline-block text-[11px] font-semibold text-green-600 uppercase tracking-[0.2em] mb-2">Welcome to hiromart
+
+</span>
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
               Unlock Exclusive Deals &<br />
               <span className="text-green-600">Join 12,000+ Happy Shoppers</span>

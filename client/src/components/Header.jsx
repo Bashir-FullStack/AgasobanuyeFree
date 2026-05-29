@@ -7,6 +7,7 @@ import { useWishlist } from "../context/WishlistContext";
 import { useCompare } from "../context/CompareContext";
 import { useAuth } from "../context/AuthContext";
 import { API } from "../config";
+import { getSearchHistory, addSearchHistory, clearSearchHistory } from "../utils/searchHistory";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -17,6 +18,7 @@ export default function Header() {
   const [popularSearches, setPopularSearches] = useState([]);
   const [catOptions, setCatOptions] = useState([]);
   const [selectedCat, setSelectedCat] = useState("");
+  const [searchHistory, setSearchHistory] = useState(getSearchHistory());
   const [scrolled, setScrolled] = useState(false);
   const searchRef = useRef(null);
   const navigate = useNavigate();
@@ -50,6 +52,8 @@ export default function Header() {
   const handleSearch = (e) => {
     e?.preventDefault();
     if (searchQuery.trim()) {
+      addSearchHistory(searchQuery);
+      setSearchHistory(getSearchHistory());
       setShowSuggestions(false);
       const cat = selectedCat ? `&category=${encodeURIComponent(selectedCat)}` : "";
       navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}${cat}`);
@@ -125,6 +129,19 @@ export default function Header() {
                       {suggestions.categories.map(c => (
                         <Link key={c} to={`/category/${c.toLowerCase()}`} onClick={() => setShowSuggestions(false)} className="text-xs px-3 py-1.5 bg-primary-lighter rounded-full text-primary font-medium hover:bg-primary hover:text-white transition">{c}</Link>
                       ))}
+                    </div>
+                  </div>
+                )}
+                {!suggestions?.products?.length && !suggestions?.categories?.length && searchHistory.length > 0 && (
+                  <div className="mb-3">
+                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1 flex items-center gap-1"><FiClock size={12} /> Recent Searches</p>
+                    <div className="space-y-0.5">
+                      {searchHistory.slice(0, 5).map(q => (
+                        <button key={q} onClick={() => { setSearchQuery(q); setShowSuggestions(false); addSearchHistory(q); navigate(`/shop?search=${encodeURIComponent(q)}`); }} className="w-full text-left flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-gray-50 transition text-sm text-gray-600">
+                          <FiSearch size={13} className="text-gray-300" /> {q}
+                        </button>
+                      ))}
+                      <button onClick={() => { clearSearchHistory(); setSearchHistory([]); }} className="w-full text-left px-2 py-1 text-xs text-gray-400 hover:text-red-500 transition mt-1">Clear history</button>
                     </div>
                   </div>
                 )}

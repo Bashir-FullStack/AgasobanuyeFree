@@ -73,9 +73,11 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-base mb-5 text-white">Contact Us</h4>
             <ul className="space-y-3.5 text-sm text-gray-400">
-              <li className="flex items-start gap-3"><span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5"><FiMapPin className="text-primary" size={15} /></span><span>Hiromart, 507-Union Trade Centre, Kigali, Rwanda</span></li>
+              <li className="flex items-start gap-3"><span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5"><FiMapPin className="text-primary" size={15} /></span><span>hiromart
+
+, 507-Union Trade Centre, Kigali, Rwanda</span></li>
               <li className="flex items-center gap-3"><span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0"><FiPhone className="text-primary" size={15} /></span><a href="tel:+250798388890" className="hover:text-primary transition">+250 798 388 890</a></li>
-              <li className="flex items-center gap-3"><span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0"><FiMail className="text-primary" size={15} /></span><a href="mailto:hakorimanasharif12@gmail.com" className="hover:text-primary transition break-all">hakorimanasharif12@gmail.com</a></li>
+              <li className="flex items-center gap-3"><span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0"><FiMail className="text-primary" size={15} /></span><a href="mailto:bashirfullstack3@gmail.com" className="hover:text-primary transition break-all">bashirfullstack3@gmail.com</a></li>
               <li className="flex items-start gap-3"><span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5"><FiClock className="text-primary" size={15} /></span><div><span className="font-medium text-white block">Working Hours</span><span className="text-gray-500">Mon-Sat: 8:00 AM - 8:00 PM</span></div></li>
               <li className="flex items-start gap-3"><span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5"><FiMessageSquare className="text-primary" size={15} /></span><div><span className="font-medium text-white">Online Chat</span><p className="text-gray-500 text-xs">Get Expert Help</p></div></li>
             </ul>
@@ -168,7 +170,9 @@ export default function Footer() {
           </div>
         </div>
         <div className="flex flex-col md:flex-row items-center justify-between py-8 gap-4">
-          <p className="text-xs text-gray-500">&copy; 2026 Hiromart. All Rights Reserved.</p>
+          <p className="text-xs text-gray-500">&copy; 2026 hiromart
+
+. All Rights Reserved.</p>
           <div className="flex items-center gap-2">
             {["https://i.pinimg.com/736x/7f/eb/02/7feb0256dc66ee941c1a5d4c945ed60b.jpg", "https://i.pinimg.com/736x/a2/68/8b/a2688b6db24e7fdc9b6de25aa7196345.jpg", "https://i.pinimg.com/736x/d1/08/7d/d1087d1abc263b95a2bea32cd9e70ba0.jpg"].map((src, i) => (
               <div key={i} className="px-3 py-2 bg-white/5 rounded-lg"><img src={src} alt="Payment" className="h-6" /></div>

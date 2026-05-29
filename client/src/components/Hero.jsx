@@ -6,8 +6,10 @@ import "swiper/css";
 import "swiper/css/pagination";
 import API from "../utils/api";
 import { HeroSkeleton } from "./Skeletons";
+import { useTranslation } from "../i18n/TranslationContext";
 
 export default function Hero() {
+  const { t } = useTranslation();
   const [slides, setSlides] = useState([]);
   const [sideBanners, setSideBanners] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -40,9 +42,9 @@ export default function Hero() {
                       <h2 className="text-xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-dark mb-2 md:mb-3 leading-tight" style={{ animation: "fadeSlideLeft 0.8s ease-out 0.2s both" }}>{s.title}</h2>
                       {s.description && <p className="text-sm md:text-lg text-gray-700 mb-3 md:mb-5" style={{ animation: "fadeSlideLeft 0.8s ease-out 0.4s both" }}>{s.description}</p>}
                       {s.link?.startsWith("http") ? (
-                        <a href={s.link} className="inline-block bg-primary text-white px-6 md:px-8 py-2.5 md:py-3.5 rounded-xl text-xs md:text-sm font-semibold hover:bg-primary-dark transition shadow-lg shadow-primary/25" style={{ animation: "fadeSlideLeft 0.8s ease-out 0.6s both" }}>Shop Now →</a>
+                        <a href={s.link} className="inline-block bg-primary text-white px-6 md:px-8 py-2.5 md:py-3.5 rounded-xl text-xs md:text-sm font-semibold hover:bg-primary-dark transition shadow-lg shadow-primary/25" style={{ animation: "fadeSlideLeft 0.8s ease-out 0.6s both" }}>{t("hero.shopNow")} →</a>
                       ) : (
-                        <Link to={s.link || "#"} className="inline-block bg-primary text-white px-6 md:px-8 py-2.5 md:py-3.5 rounded-xl text-xs md:text-sm font-semibold hover:bg-primary-dark transition shadow-lg shadow-primary/25" style={{ animation: "fadeSlideLeft 0.8s ease-out 0.6s both" }}>Shop Now →</Link>
+                        <Link to={s.link || "#"} className="inline-block bg-primary text-white px-6 md:px-8 py-2.5 md:py-3.5 rounded-xl text-xs md:text-sm font-semibold hover:bg-primary-dark transition shadow-lg shadow-primary/25" style={{ animation: "fadeSlideLeft 0.8s ease-out 0.6s both" }}>{t("hero.shopNow")} →</Link>
                       )}
                     </div>
                   </div>
@@ -60,7 +62,7 @@ export default function Hero() {
                   <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-transparent p-6 flex flex-col justify-center">
                     <h3 className="text-white text-lg font-bold leading-tight">{b.title}</h3>
                     {b.description && <p className="text-primary font-bold text-2xl mt-1">{b.description}</p>}
-                    <span className="text-white/90 text-sm underline underline-offset-4 mt-2 inline-block group-hover:text-primary transition">shop now</span>
+                    <span className="text-white/90 text-sm underline underline-offset-4 mt-2 inline-block group-hover:text-primary transition">{t("hero.shopNow")}</span>
                   </div>
                 </Wrapper>
               );
@@ -77,7 +79,7 @@ export default function Hero() {
                     <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent p-4 flex flex-col justify-center">
                       <h3 className="text-white text-sm font-semibold">{b.title}</h3>
                       {b.description && <p className="text-primary font-bold text-base mt-0.5">{b.description}</p>}
-                      <span className="text-white/80 text-[11px] underline mt-1 inline-block">shop now</span>
+                      <span className="text-white/80 text-[11px] underline mt-1 inline-block">{t("hero.shopNow")}</span>
                     </div>
                   </Wrapper>
                 );

@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 
-const SITE_NAME = "Hiromart";
+const SITE_NAME = "hiromart";
 const DEFAULT_DESC = "Your premier online shopping destination in Rwanda. Shop fashion, electronics, accessories, and more with fast delivery across Kigali.";
 const SITE_URL = "https://hiromart-client.netlify.app";
 const DEFAULT_IMAGE = "https://res.cloudinary.com/dkmdeqbof/image/upload/v1779451345/Gemini_Generated_Image_ekvkvnekvkvnekvk_znyrps.png";

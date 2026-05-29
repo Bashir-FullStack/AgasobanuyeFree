@@ -1,77 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://hiromart-client.netlify.app/</loc>
+    <loc>https://hiromart
+
+-client.netlify.app/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://hiromart-client.netlify.app/shop</loc>
+    <loc>https://hiromart
+
+-client.netlify.app/shop</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://hiromart-client.netlify.app/categories</loc>
+    <loc>https://hiromart
+
+-client.netlify.app/categories</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hiromart-client.netlify.app/about</loc>
+    <loc>https://hiromart
+
+-client.netlify.app/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://hiromart-client.netlify.app/contact</loc>
+    <loc>https://hiromart
+
+-client.netlify.app/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://hiromart-client.netlify.app/terms</loc>
+    <loc>https://hiromart
+
+-client.netlify.app/terms</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://hiromart-client.netlify.app/secure-payment</loc>
+    <loc>https://hiromart
+
+-client.netlify.app/secure-payment</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://hiromart-client.netlify.app/stores</loc>
+    <loc>https://hiromart
+
+-client.netlify.app/stores</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://hiromart-client.netlify.app/accessories</loc>
+    <loc>https://hiromart
+
+-client.netlify.app/accessories</loc>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://hiromart-client.netlify.app/new-products</loc>
+    <loc>https://hiromart
+
+-client.netlify.app/new-products</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hiromart-client.netlify.app/best-sellers</loc>
+    <loc>https://hiromart
+
+-client.netlify.app/best-sellers</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hiromart-client.netlify.app/prices-drop</loc>
+    <loc>https://hiromart
+
+-client.netlify.app/prices-drop</loc>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://hiromart-client.netlify.app/discounts</loc>
+    <loc>https://hiromart
+
+-client.netlify.app/discounts</loc>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://hiromart-client.netlify.app/help</loc>
+    <loc>https://hiromart
+
+-client.netlify.app/help</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://hiromart-client.netlify.app/sitemap</loc>
+    <loc>https://hiromart
+
+-client.netlify.app/sitemap</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>

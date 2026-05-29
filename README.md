@@ -1,13 +1,18 @@
-# Hiromart - E-Commerce Platform
+# hiromart
+
+ - E-Commerce Platform
 
 Full e-commerce platform with client storefront and admin dashboard.
 
 ## Architecture
 
 ```
-hiromarrt/
+hiromart
+/
 ├── client/          → Storefront (React 19 + Vite 8 + Tailwind v4)
-│   ├── Deployed: hiromart-client.netlify.app
+│   ├── Deployed: hiromart
+
+-client.netlify.app
 │   └── Features: Products, Cart, Checkout, Auth, Orders, etc.
 ├── admin/           → Admin Dashboard (React 18 + Vite 5 + Tailwind v3)
 │   ├── Deployed: classyshop-admin.vercel.app
@@ -15,7 +20,9 @@ hiromarrt/
 └── .env             → Shared API config
 ```
 
-**Backend API**: `https://hiromart-backend.onrender.com/api`
+**Backend API**: `https://hiromart
+
+-backend.onrender.com/api`
 
 ## Setup
 

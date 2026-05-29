@@ -36,6 +36,16 @@
   "common.optional": "facultatif",
   "common.required": "obligatoire",
 
+  "cookie.title": "Cookies et confidentialité",
+  "cookie.description": "Nous utilisons des cookies pour améliorer votre expérience. En acceptant, vous consentez à tous les cookies.",
+  "cookie.accept": "Tout accepter",
+  "cookie.reject": "Refuser",
+
+  "topbar.followUs": "Suivez-nous :",
+  "topbar.promo": "Jusqu'à 50% de réduction sur les nouvelles collections, offre limitée",
+  "topbar.helpCenter": "Centre d'aide",
+  "topbar.currency": "FRw",
+
   "nav.home": "Accueil",
   "nav.shop": "Boutique",
   "nav.categories": "Catégories",

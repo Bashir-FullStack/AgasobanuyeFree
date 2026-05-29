@@ -36,6 +36,16 @@
   "common.optional": "bishoboka",
   "common.required": "birakenewe",
 
+  "cookie.title": "Ibisobanuro ku makuki",
+  "cookie.description": "Dukoresha makuki kugirango tugufashe neza. Uzemera makuki yose iyo wemeye.",
+  "cookie.accept": "Kwemera byose",
+  "cookie.reject": "Kwangana",
+
+  "topbar.followUs": "Dukurikire:",
+  "topbar.promo": "Sabukuru kugeza 50% ku buryo bushya, igihe gito gusa",
+  "topbar.helpCenter": "Ubufasha",
+  "topbar.currency": "FRw",
+
   "nav.home": "Ahabanza",
   "nav.shop": "Isoko",
   "nav.categories": "Ibyiciro",
@@ -54,7 +64,8 @@
   "nav.signup": "Iyandikishe",
   "nav.account": "Igenamiterere",
   "nav.trackOrder": "Gukurikirana",
-  "nav.menu": "Menu",
+
+  "header.menu": "Menu",
 
   "header.search": "Shaka ibicuruzwa...",
   "header.searchPlaceholder": "Shaka ibicuruzwa...",

@@ -31,8 +31,8 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
           {[
             { icon: FiPhone, label: "Phone", value: "+250 798 388 890", action: "tel:+250798388890", btn: "Call Now" },
-            { icon: FiMail, label: "Email", value: "hakorimanasharif12@gmail.com", action: "mailto:hakorimanasharif12@gmail.com", btn: "Send Email" },
-            { icon: FaWhatsapp, label: "WhatsApp", value: "+250 798 388 890", action: "https://wa.me/250798388890", btn: "Chat Now" },
+            { icon: FiMail, label: "Email", value: "bashirfullstack3@gmail.com", action: "mailto:bashirfullstack3@gmail.com", btn: "Send Email" },
+            { icon: FaWhatsapp, label: "WhatsApp", value: "+250 791 783 863", action: "https://wa.me/250791783863", btn: "Chat Now" },
             { icon: FiClock, label: "Working Hours", value: "Mon-Sat, 8AM-8PM", action: null, btn: null },
           ].map((c) => (
             <div key={c.label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-center hover:shadow-md transition">
@@ -83,9 +83,11 @@ export default function ContactPage() {
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
               <h2 className="text-lg font-bold text-dark mb-4">Our Location</h2>
               <div className="space-y-4 text-sm text-gray-600">
-                <div className="flex items-start gap-3"><FiMapPin className="mt-0.5 shrink-0 text-primary" size={18} /><span>Hiromart, 507-Union Trade Centre, Kigali, Rwanda</span></div>
+                <div className="flex items-start gap-3"><FiMapPin className="mt-0.5 shrink-0 text-primary" size={18} /><span>hiromart
+
+, 507-Union Trade Centre, Kigali, Rwanda</span></div>
                 <div className="flex items-center gap-3"><FiPhone className="shrink-0 text-primary" size={18} /><a href="tel:+250798388890" className="hover:text-primary transition">+250 798 388 890</a></div>
-                <div className="flex items-center gap-3"><FiMail className="shrink-0 text-primary" size={18} /><a href="mailto:hakorimanasharif12@gmail.com" className="hover:text-primary transition break-all">hakorimanasharif12@gmail.com</a></div>
+                <div className="flex items-center gap-3"><FiMail className="shrink-0 text-primary" size={18} /><a href="mailto:bashirfullstack3@gmail.com" className="hover:text-primary transition break-all">bashirfullstack3@gmail.com</a></div>
                 <div className="flex items-start gap-3"><FiClock className="mt-0.5 shrink-0 text-primary" size={18} /><div><span className="font-medium text-dark block">Working Hours</span><span className="text-gray-500">Monday - Saturday: 8:00 AM - 8:00 PM</span></div></div>
               </div>
               <div className="mt-6 pt-6 border-t border-gray-100">

@@ -81,7 +81,9 @@ export default function HelpCenterPage() {
           <h3 className="text-lg font-bold text-dark mb-2">Still need help?</h3>
           <p className="text-sm text-gray-500 mb-5 max-w-md mx-auto">Our support team is ready to assist you. Reach out and we'll get back to you within 24 hours.</p>
           <div className="flex items-center justify-center gap-4">
-            <a href="mailto:support@hiromart.com" className="flex items-center gap-2 bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-dark transition shadow-sm"><FiMail size={16} /> Email Us</a>
+            <a href="mailto:support@hiromart
+
+.com" className="flex items-center gap-2 bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-dark transition shadow-sm"><FiMail size={16} /> Email Us</a>
             <a href="#" className="flex items-center gap-2 border border-gray-200 text-gray-600 px-6 py-2.5 rounded-lg text-sm font-semibold hover:border-primary hover:text-primary transition">Live Chat</a>
           </div>
         </div>

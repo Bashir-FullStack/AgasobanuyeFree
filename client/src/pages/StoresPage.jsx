@@ -2,10 +2,10 @@ import { useState } from "react";
 import { FiMapPin, FiPhone, FiClock, FiNavigation, FiSearch } from "react-icons/fi";
 
 const stores = [
-  { name: "Hiromart Kigali", address: "KG 123 St, Kigali City Center", phone: "+250 788 000 001", hours: "Mon-Sat 8AM-8PM", coords: "-1.9441,30.0619" },
-  { name: "Hiromart Butare", address: "KN 456 Blvd, Butare", phone: "+250 788 000 002", hours: "Mon-Sat 8AM-7PM", coords: "-2.5967,29.7394" },
-  { name: "Hiromart Musanze", address: "Northern Province, Musanze", phone: "+250 788 000 003", hours: "Mon-Sat 8AM-6PM", coords: "-1.4998,29.6340" },
-  { name: "Hiromart Rubavu", address: "Western Province, Rubavu", phone: "+250 788 000 004", hours: "Mon-Sat 8AM-7PM", coords: "-1.6783,29.2585" },
+  { name: "hiromartKigali", address: "KG 123 St, Kigali City Center", phone: "+250 788 000 001", hours: "Mon-Sat 8AM-8PM", coords: "-1.9441,30.0619" },
+  { name: "hiromartButare", address: "KN 456 Blvd, Butare", phone: "+250 788 000 002", hours: "Mon-Sat 8AM-7PM", coords: "-2.5967,29.7394" },
+  { name: "hiromartMusanze", address: "Northern Province, Musanze", phone: "+250 788 000 003", hours: "Mon-Sat 8AM-6PM", coords: "-1.4998,29.6340" },
+  { name: "hiromart Rubavu", address: "Western Province, Rubavu", phone: "+250 788 000 004", hours: "Mon-Sat 8AM-7PM", coords: "-1.6783,29.2585" },
 ];
 
 export default function StoresPage() {
@@ -18,7 +18,9 @@ export default function StoresPage() {
         <div className="max-w-[800px] mx-auto px-4 py-14 text-center">
           <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4"><FiMapPin size={28} className="text-primary" /></div>
           <h1 className="text-3xl font-bold text-dark">Our Stores</h1>
-          <p className="text-gray-500 text-sm mt-2">Find a Hiromart store near you.</p>
+          <p className="text-gray-500 text-sm mt-2">Find a hiromart
+
+ store near you.</p>
           <div className="relative max-w-md mx-auto mt-5">
             <FiSearch size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
             <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search stores..." className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm outline-none focus:border-primary transition shadow-sm" />

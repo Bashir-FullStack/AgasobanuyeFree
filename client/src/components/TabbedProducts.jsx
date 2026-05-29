@@ -10,7 +10,8 @@ export default function TabbedProducts() {
   const [active, setActive] = useState("");
   const scrollRef = useRef(null);
   const activeCat = active || (tabs.length > 0 ? tabs[0] : "");
-  const { data: products, loading } = useFetch(activeCat ? `/products?category=${activeCat}&limit=10` : null, [activeCat]);
+  const { data, loading } = useFetch(activeCat ? `/products?category=${activeCat}&limit=10` : null, [activeCat]);
+  const products = Array.isArray(data) ? data : data?.products || [];
 
   const scroll = (dir) => {
     if (scrollRef.current) scrollRef.current.scrollBy({ left: dir * 150, behavior: "smooth" });
@@ -38,7 +39,7 @@ export default function TabbedProducts() {
         </div>
         {loading ? <ProductGridSkeleton count={5} /> : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-            {(products || []).slice(0, 10).map((p) => (
+            {products.slice(0, 10).map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>

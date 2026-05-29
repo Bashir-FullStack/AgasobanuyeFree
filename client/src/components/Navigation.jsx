@@ -26,9 +26,9 @@ export default function Navigation() {
   const { data: dealsData } = useFetch("/products/prices-drop?limit=4");
 
   const categories = categoriesData || [];
-  const navProducts = (productsData || []).slice(0, 6);
-  const newCollection = (newCollectionData || []).slice(0, 5);
-  const deals = (dealsData || []).slice(0, 4);
+  const navProducts = (Array.isArray(productsData) ? productsData : productsData?.products || []).slice(0, 6);
+  const newCollection = (Array.isArray(newCollectionData) ? newCollectionData : newCollectionData?.products || []).slice(0, 5);
+  const deals = (Array.isArray(dealsData) ? dealsData : dealsData?.products || []).slice(0, 4);
 
   const loadedRef = useRef(false);
   const closeTimerRef = useRef(null);

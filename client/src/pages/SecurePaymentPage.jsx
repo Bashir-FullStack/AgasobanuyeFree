@@ -39,7 +39,9 @@ export default function SecurePaymentPage() {
 
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 flex items-start gap-4">
           <FiAlertTriangle size={20} className="text-amber-500 shrink-0 mt-0.5" />
-          <div><h4 className="text-sm font-semibold text-amber-800">Stay Safe Online</h4><p className="text-xs text-amber-700 mt-1">Never share your password, PIN, or one-time codes with anyone. Hiromart will never ask for your sensitive payment information via email or phone.</p></div>
+          <div><h4 className="text-sm font-semibold text-amber-800">Stay Safe Online</h4><p className="text-xs text-amber-700 mt-1">Never share your password, PIN, or one-time codes with anyone. hiromart
+
+ will never ask for your sensitive payment information via email or phone.</p></div>
         </div>
       </div>
     </div>

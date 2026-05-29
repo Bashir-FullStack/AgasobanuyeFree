@@ -44,7 +44,9 @@ export default function SitemapPage() {
       <div className="bg-gradient-to-r from-primary/10 to-primary/5 border-b border-gray-100">
         <div className="max-w-[800px] mx-auto px-4 py-14 text-center">
           <h1 className="text-3xl font-bold text-dark">Sitemap</h1>
-          <p className="text-gray-500 text-sm mt-2">A complete overview of all pages on Hiromart.</p>
+          <p className="text-gray-500 text-sm mt-2">A complete overview of all pages on hiromart
+
+.</p>
         </div>
       </div>
       <div className="max-w-[800px] mx-auto px-4 py-10">
