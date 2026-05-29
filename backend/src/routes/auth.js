@@ -15,15 +15,12 @@ router.post('/login', async (req, res) => {
       .from('users')
       .select('*')
       .eq('email', email)
-      .eq('role', 'admin')
-      .single();
-    if (error || !data) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      .maybeSingle();
+    if (error) throw error;
+    if (data && data.password === password) {
+      return res.json({ token, user: { id: data.id, email: data.email, name: data.name, role: data.role, avatar: data.avatar } });
     }
-    if (data.password === password) {
-      return res.json({ token, user: { id: data.id, email: data.email, name: data.name, role: data.role } });
-    }
-    res.status(401).json({ error: 'Invalid credentials' });
+    res.status(401).json({ error: 'Invalid email or password' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

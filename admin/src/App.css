@@ -227,6 +227,7 @@ input, textarea, select, button {
   left: 0;
   top: 0;
   bottom: 0;
+  height: 100vh;
   width: var(--sidebar-width);
   background: var(--bg-secondary);
   border-right: 1px solid var(--border);
@@ -617,4 +618,35 @@ input, textarea, select, button {
   border-radius: var(--radius);
   margin-bottom: 16px;
   font-size: 14px;
+}
+
+html.light {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f7;
+  --bg-card: #ffffff;
+  --bg-elevated: #e8e8ed;
+  --bg-hover: #e8e8ed;
+  --text-primary: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-muted: #8e8e93;
+  --border: #d2d2d7;
+  --border-light: #e5e5ea;
+  --glass-bg: rgba(0, 0, 0, 0.03);
+  --glass-border: rgba(0, 0, 0, 0.06);
+}
+
+html.light .modal-overlay {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+html.light .login-page {
+  background-image: radial-gradient(ellipse at center, rgba(255, 30, 30, 0.04) 0%, transparent 70%);
+}
+
+html.light .login-card {
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
+}
+
+html.light .modal-content {
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.15);
 }

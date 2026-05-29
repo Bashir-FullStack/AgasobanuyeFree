@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { FiFilm, FiUsers, FiGrid, FiTag, FiMonitor, FiBookOpen, FiUserCheck, FiLogOut, FiBarChart2, FiGift, FiStar, FiMail } from 'react-icons/fi';
+import { FiFilm, FiUsers, FiGrid, FiTag, FiMonitor, FiBookOpen, FiUserCheck, FiLogOut, FiBarChart2, FiGift, FiStar, FiMail, FiSun, FiMoon } from 'react-icons/fi';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: <FiBarChart2 />, end: true },
@@ -18,6 +18,21 @@ const navItems = [
 
 const Layout = () => {
   const navigate = useNavigate();
+  const [isLight, setIsLight] = React.useState(() => {
+    return localStorage.getItem('theme') === 'light';
+  });
+
+  const toggleTheme = () => {
+    const next = !isLight;
+    setIsLight(next);
+    const theme = next ? 'light' : 'dark';
+    localStorage.setItem('theme', theme);
+    document.documentElement.classList.toggle('light', next);
+  };
+
+  React.useEffect(() => {
+    document.documentElement.classList.toggle('light', isLight);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('admin_token');
@@ -31,7 +46,7 @@ const Layout = () => {
           <img src="https://i.ibb.co/sdytJ14n/Chat-GPT-Image-May-26-2026-06-12-32-AM.png" alt="Logo" className="w-8 h-8 rounded-full object-cover" />
           <h2 style={{ fontSize: 14 }}>AgasobanuyeFREE</h2>
         </div>
-        <nav className="sidebar-nav">
+        <nav className="sidebar-nav" style={{ overflowY: 'auto', minHeight: 0 }}>
           {navItems.map((item) => (
             <NavLink
               key={item.path}
@@ -44,7 +59,7 @@ const Layout = () => {
             </NavLink>
           ))}
         </nav>
-        <div style={{ padding: '12px', borderTop: '1px solid var(--border)' }}>
+        <div style={{ padding: '12px', borderTop: '1px solid var(--border)', flexShrink: 0 }}>
           <button className="btn btn-secondary btn-block btn-sm" onClick={handleLogout}>
             <FiLogOut /> Logout
           </button>
@@ -56,6 +71,9 @@ const Layout = () => {
             <h1>Admin Panel</h1>
           </div>
           <div className="header-actions">
+            <button className="btn btn-icon btn-secondary" onClick={toggleTheme} title={`Switch to ${isLight ? 'dark' : 'light'} theme`}>
+              {isLight ? <FiMoon /> : <FiSun />}
+            </button>
             <div className="header-user">
               <FiUserCheck className="header-user-icon" />
               <span>Admin</span>

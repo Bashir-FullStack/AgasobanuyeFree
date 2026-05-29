@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiSearch, FiUser, FiMenu, FiX, FiLogOut, FiHome, FiFilm } from "react-icons/fi";
+import { FiSearch, FiUser, FiMenu, FiX, FiLogOut, FiHome, FiFilm, FiSun, FiMoon } from "react-icons/fi";
 import { BsHeartFill } from "react-icons/bs";
 import { useWishlist } from "../context/WishlistContext";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -14,6 +15,7 @@ export default function Header() {
   const navigate = useNavigate();
   const { count: wishCount } = useWishlist();
   const { user, logout, isLoggedIn } = useAuth();
+  const { dark, toggle: toggleTheme } = useTheme();
   const initial = user?.name?.charAt(0)?.toUpperCase() || "?";
   const profilePic = user?.avatar || user?.picture || null;
 
@@ -66,6 +68,9 @@ export default function Header() {
           </div>
           <div className="flex items-center gap-2 lg:gap-4">
             <Link to="/favorites" className="relative p-2 text-gray-400 hover:text-[#f5c518] transition rounded-lg hover:bg-gray-800"><BsHeartFill size={18} />{wishCount > 0 && <span className="absolute -top-0.5 -right-0.5 bg-[#f5c518] text-black text-[9px] min-w-[18px] h-[18px] rounded-full flex items-center justify-center font-bold">{wishCount}</span>}</Link>
+            <button onClick={toggleTheme} className="w-9 h-9 rounded-xl flex items-center justify-center text-gray-400 hover:text-[#f5c518] hover:bg-gray-800 transition" title={dark ? "Light mode" : "Dark mode"}>
+              {dark ? <FiSun size={18} /> : <FiMoon size={18} />}
+            </button>
             {isLoggedIn ? (
               <div className="relative ml-2 lg:ml-3">
                 <button onClick={() => setProfileOpen(!profileOpen)} className="focus:outline-none">
