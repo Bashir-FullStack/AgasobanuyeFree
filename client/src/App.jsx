@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate, Link, Navigate } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { loadStripe } from "@stripe/stripe-js";
@@ -8,6 +8,8 @@ import { WishlistProvider } from "./context/WishlistContext";
 import { CompareProvider } from "./context/CompareContext";
 import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./context/AuthContext";
+import { NotificationProvider, useNotification } from "./context/NotificationContext";
+import ToastContainer from "./components/ToastContainer";
 import { API } from "./config";
 import SEO from "./components/SEO";
 import { TranslationProvider } from "./i18n/TranslationContext";
@@ -118,11 +120,52 @@ function StreamingLayout({ children, seo }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout, isLoggedIn } = useAuth();
+  const { toast } = useNotification();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [notifications, setNotifications] = useState([]);
+  const seenNotifs = useRef(new Set());
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const fetchNotifications = () => {
+    fetch(`${API}/notifications`)
+      .then(r => r.json())
+      .then(data => {
+        const list = Array.isArray(data) ? data : [];
+        setNotifications(list);
+        list.forEach(n => {
+          const nid = n.id || n._id;
+          if (nid && !seenNotifs.current.has(nid)) {
+            seenNotifs.current.add(nid);
+            toast(n.message || n.title || "New notification", "info");
+          }
+        });
+      })
+      .catch(() => {});
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (notifOpen && unreadCount > 0) {
+      const unreadIds = notifications.filter(n => !n.read).map(n => n.id);
+      fetch(`${API}/notifications/read`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: unreadIds }),
+      }).then(() => {
+        setNotifications(prev => prev.map(n => n.read ? n : { ...n, read: true }));
+      }).catch(() => {});
+    }
+  }, [notifOpen]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -247,8 +290,51 @@ function StreamingLayout({ children, seo }) {
                 style={{ backgroundColor: "var(--bg-input)", color: "var(--text-secondary)" }}
               >
                 <BellIcon />
-                <span className="absolute -top-0.5 -right-0.5 w-[16px] h-[16px] bg-[#f5c518] text-black text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">3</span>
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-[16px] h-[16px] bg-[#f5c518] text-black text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">{unreadCount > 9 ? '9+' : unreadCount}</span>
+                )}
               </button>
+
+              {notifOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setNotifOpen(false)} />
+                  <div className="absolute top-full right-0 mt-2 w-[320px] max-h-[400px] rounded-2xl shadow-2xl z-50 overflow-hidden" style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border-color)" }}>
+                    <div className="p-4 text-sm font-bold" style={{ borderBottom: "1px solid var(--border-color)", color: "var(--text-primary)" }}>
+                      Notifications
+                    </div>
+                    <div className="overflow-y-auto max-h-[340px]">
+                      {notifications.length === 0 ? (
+                        <div className="p-6 text-center text-sm" style={{ color: "var(--text-muted)" }}>No notifications yet</div>
+                      ) : (
+                        notifications.map(n => (
+                          <div key={n.id} className={`flex items-start gap-3 px-4 py-3 transition-all hover:bg-[var(--bg-page)] ${n.read ? '' : 'border-l-2 border-[#f5c518]'}`} style={{ borderBottom: "1px solid var(--border-color)" }}>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm" style={{ color: "var(--text-primary)" }}>{n.message}</p>
+                              <p className="text-[10px] mt-1" style={{ color: "var(--text-muted)" }}>
+                                {(() => {
+                                  const diff = Date.now() - new Date(n.created_at).getTime();
+                                  const mins = Math.floor(diff / 60000);
+                                  if (mins < 1) return 'just now';
+                                  if (mins < 60) return `${mins}m ago`;
+                                  const hrs = Math.floor(mins / 60);
+                                  if (hrs < 24) return `${hrs}h ago`;
+                                  const days = Math.floor(hrs / 24);
+                                  return `${days}d ago`;
+                                })()}
+                              </p>
+                            </div>
+                            {n.movie_id && (
+                              <Link to={`/movies/${n.movie_id}`} onClick={() => setNotifOpen(false)} className="shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-lg transition-all hover:scale-105" style={{ backgroundColor: "var(--bg-page)", color: "var(--text-secondary)" }}>
+                                View
+                              </Link>
+                            )}
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
 
               <div className="relative">
                 <button
@@ -489,6 +575,13 @@ function HomePage() {
                   <div className="relative aspect-video overflow-hidden">
                     <img src={movie.poster || movie.image || `https://picsum.photos/seed/movie${movie.id}/300/170`} alt={movie.title} className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-110" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity" />
+                    {movie.badge && (
+                      <div className="absolute top-2 left-2">
+                        <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-[#f5c518] text-black font-bold shadow-md">
+                          {badgeIcon(movie.badge)({ size: 12 })} {movie.badge}
+                        </span>
+                      </div>
+                    )}
                     {movie.quality && (
                       <div className="absolute bottom-2 right-2 flex gap-1.5 opacity-0 group-hover/card:opacity-100 transition-all duration-300 translate-y-2 group-hover/card:translate-y-0">
                         <span className="text-[10px] px-2 py-0.5 rounded bg-[#f5c518] text-black font-bold">{movie.quality}</span>
@@ -496,7 +589,11 @@ function HomePage() {
                     )}
                   </div>
                   <div className="p-3">
-                    <h3 className="text-sm font-semibold truncate" style={{ color: "var(--text-primary)" }}>{movie.title}</h3>
+                    <h3 className="text-sm font-semibold truncate flex items-center gap-1" style={{ color: "var(--text-primary)" }}>
+                      {movie.type === "Season" && <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500 text-white font-bold shrink-0">Season</span>}
+                      {movie.type === "Episode" && <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500 text-white font-bold shrink-0">Episode</span>}
+                      {movie.title}
+                    </h3>
                     <div className="flex items-center gap-2 mt-1">
                       {movie.rating && <span className="text-xs text-[#f5c518] font-semibold">★ {movie.rating}</span>}
                       {movie.year && <span className="text-xs" style={{ color: "var(--text-muted)" }}>{movie.year}</span>}
@@ -506,8 +603,7 @@ function HomePage() {
               ))}
             </div>
           </div>
-        );
-      })}
+        )})}
 
       {/* All Movies row */}
       {remainingMovies.map(({ genre, movies: genreMovies }) => (
@@ -696,6 +792,7 @@ export default function App() {
       <CartProvider>
         <WishlistProvider>
         <CompareProvider>
+        <NotificationProvider>
         <React.Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div></div>}>
         <Routes>
           <Route path="/" element={<StreamingLayout seo={<SEO title="Home - AgasobanuyeFree Streaming" description="Ultimate African streaming experience - movies, live sports, and exclusive content" keywords="streaming, movies, live sports, African cinema" />}><HomePage /></StreamingLayout>} />
@@ -731,12 +828,14 @@ export default function App() {
           <Route path="/new-products" element={<StreamingLayout seo={<SEO title="New Releases" />}><NewProductsPage /></StreamingLayout>} />
           <Route path="/best-sellers" element={<StreamingLayout seo={<SEO title="Trending" />}><BestSellersPage /></StreamingLayout>} />
           <Route path="/movies" element={<StreamingLayout seo={<SEO title="Movies - AgasobanuyeFree Streaming" />}><ShopPage /></StreamingLayout>} />
-          <Route path="/movie/:id" element={<StreamingLayout seo={<SEO title="Movie - AgasobanuyeFree Streaming" />}><MoviePage /></StreamingLayout>} />
+          <Route path="/movie/:id" element={<StreamingLayout><MoviePage /></StreamingLayout>} />
           <Route path="/genres" element={<StreamingLayout seo={<SEO title="Genres - AgasobanuyeFree Streaming" />}><GenreListingPage /></StreamingLayout>} />
           <Route path="/favorites" element={<Navigate to="/wishlist" replace />} />
           <Route path="*" element={<StreamingLayout><NotFoundPage /></StreamingLayout>} />
         </Routes>
+        <ToastContainer />
         </React.Suspense>
+        </NotificationProvider>
         </CompareProvider>
         </WishlistProvider>
       </CartProvider>

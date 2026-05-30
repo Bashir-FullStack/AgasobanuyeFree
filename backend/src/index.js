@@ -53,6 +53,7 @@ const paymentsRoutes = require('./routes/payments');
 const couponsRoutes = require('./routes/coupons');
 const profileRoutes = require('./routes/profile');
 const subscribeRoutes = require('./routes/subscribe');
+const { getNotifications, createNotification, markAsRead } = require('./notifications');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -279,6 +280,24 @@ app.get('/api/settings', async (req, res, next) => {
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
+});
+
+app.get('/api/notifications', (req, res) => {
+  res.json(getNotifications());
+});
+
+app.post('/api/notifications', (req, res) => {
+  const { message, type, movie_id } = req.body;
+  if (!message) return res.status(400).json({ error: 'message is required' });
+  const notif = createNotification({ message, type, movie_id });
+  res.status(201).json(notif);
+});
+
+app.patch('/api/notifications/read', (req, res) => {
+  const { ids } = req.body;
+  if (!Array.isArray(ids)) return res.status(400).json({ error: 'ids must be an array' });
+  markAsRead(ids);
+  res.json({ success: true });
 });
 
 // Error handling middleware

@@ -23,10 +23,13 @@ const api = {
     return res.json();
   },
   post: async (endpoint, body) => {
+    const isFormData = body instanceof FormData;
+    const headers = getAuthHeaders();
+    if (isFormData) delete headers['Content-Type'];
     const res = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(body),
+      headers,
+      body: isFormData ? body : JSON.stringify(body),
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ message: res.statusText }));
@@ -35,10 +38,13 @@ const api = {
     return res.json();
   },
   put: async (endpoint, body) => {
+    const isFormData = body instanceof FormData;
+    const headers = getAuthHeaders();
+    if (isFormData) delete headers['Content-Type'];
     const res = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: 'PUT',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(body),
+      headers,
+      body: isFormData ? body : JSON.stringify(body),
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({ message: res.statusText }));

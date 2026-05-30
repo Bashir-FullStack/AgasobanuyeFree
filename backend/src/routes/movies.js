@@ -1,19 +1,37 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const supabase = require('../supabase');
+
+const uploadDir = path.join(__dirname, '..', '..', 'uploads');
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, uploadDir),
+  filename: (req, file, cb) => cb(null, Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname)),
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 500 * 1024 * 1024 },
+});
+const { createNotification } = require('../notifications');
 
 const ALLOWED_MOVIE_FIELDS = [
   'title', 'description', 'poster', 'image', 'backdrop', 'banner', 'thumbnail',
   'video_url', 'year', 'duration', 'rating', 'badge', 'episode',
   'type', 'interpreter', 'genre', 'genres', 'price', 'featured', 'uploader',
-  'progress'
+  'progress', 'cast', 'director', 'trailer_url'
 ];
 
 const MOVIE_FIELDS = [
   'id', 'title', 'description', 'poster', 'image', 'backdrop', 'banner',
   'thumbnail', 'video_url', 'year', 'duration', 'rating',
   'badge', 'episode', 'type', 'interpreter', 'genre', 'genres', 'price',
-  'featured', 'uploader', 'progress', 'created_at', 'updated_at'
+  'featured', 'uploader', 'progress', 'cast', 'director', 'trailer_url',
+  'created_at', 'updated_at'
 ];
 
 function validateMovieFields(body, isUpdate = false) {
@@ -109,14 +127,32 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', upload.fields([
+  { name: 'poster_file', maxCount: 1 },
+  { name: 'video_file', maxCount: 1 },
+  { name: 'image', maxCount: 1 },
+  { name: 'banner', maxCount: 1 },
+  { name: 'video', maxCount: 1 },
+]), async (req, res) => {
   try {
+    if (req.body.featured === 'true') req.body.featured = true;
+    else if (req.body.featured === 'false') req.body.featured = false;
+
     const validationErrors = validateMovieFields(req.body, false);
     if (validationErrors.length > 0) {
       return res.status(400).json({ error: 'Validation failed', details: validationErrors });
     }
 
     const movieData = filterFields(req.body, ALLOWED_MOVIE_FIELDS);
+
+    if (req.files) {
+      if (req.files.poster_file?.[0]) movieData.poster = '/uploads/' + req.files.poster_file[0].filename;
+      if (req.files.video_file?.[0]) movieData.video_url = '/uploads/' + req.files.video_file[0].filename;
+      if (req.files.image?.[0]) movieData.image = '/uploads/' + req.files.image[0].filename;
+      if (req.files.banner?.[0]) movieData.banner = '/uploads/' + req.files.banner[0].filename;
+      if (req.files.video?.[0]) movieData.video_url = '/uploads/' + req.files.video[0].filename;
+    }
+
     movieData.title = movieData.title.trim();
     if (movieData.description) movieData.description = movieData.description.trim();
 
@@ -125,18 +161,35 @@ router.post('/', async (req, res) => {
       .insert(movieData)
       .select(MOVIE_FIELDS.join(', '));
     if (error) throw error;
+
+    createNotification({
+      message: `New movie: ${movieData.title} has been added!`,
+      type: 'movie_added',
+      movie_id: data[0].id,
+    });
+
     res.status(201).json(data[0]);
   } catch (err) {
     res.status(500).json({ error: 'Failed to create movie', details: err.message });
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', upload.fields([
+  { name: 'poster_file', maxCount: 1 },
+  { name: 'video_file', maxCount: 1 },
+  { name: 'image', maxCount: 1 },
+  { name: 'banner', maxCount: 1 },
+  { name: 'video', maxCount: 1 },
+]), async (req, res) => {
   try {
     const id = Number(req.params.id);
     if (isNaN(id) || !Number.isInteger(id) || id < 1) {
       return res.status(400).json({ error: 'Invalid movie ID' });
     }
+
+    // Type coercion for multipart/form-data (everything is a string)
+    if (req.body.featured === 'true') req.body.featured = true;
+    else if (req.body.featured === 'false') req.body.featured = false;
 
     const validationErrors = validateMovieFields(req.body, true);
     if (validationErrors.length > 0) {
@@ -144,6 +197,16 @@ router.put('/:id', async (req, res) => {
     }
 
     const movieData = filterFields(req.body, ALLOWED_MOVIE_FIELDS);
+
+    // Handle file uploads
+    if (req.files) {
+      if (req.files.poster_file?.[0]) movieData.poster = '/uploads/' + req.files.poster_file[0].filename;
+      if (req.files.video_file?.[0]) movieData.video_url = '/uploads/' + req.files.video_file[0].filename;
+      if (req.files.image?.[0]) movieData.image = '/uploads/' + req.files.image[0].filename;
+      if (req.files.banner?.[0]) movieData.banner = '/uploads/' + req.files.banner[0].filename;
+      if (req.files.video?.[0]) movieData.video_url = '/uploads/' + req.files.video[0].filename;
+    }
+
     if (Object.keys(movieData).length === 0) {
       return res.status(400).json({ error: 'No valid fields provided for update' });
     }

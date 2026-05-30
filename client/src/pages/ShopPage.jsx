@@ -1,8 +1,30 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { FiSearch } from "react-icons/fi";
+import { FiSearch, FiTrendingUp, FiZap, FiStar, FiArrowUp, FiAward, FiHeart, FiEye, FiThumbsUp, FiSun, FiMonitor, FiClock, FiPlus, FiCamera, FiRefreshCw, FiCalendar } from "react-icons/fi";
 import { API } from "../config";
 import SEO from "../components/SEO";
+
+const badgeIcon = (text) => {
+  const map = {
+    "Hot": FiZap,
+    "Trending Now": FiTrendingUp,
+    "Most Popular": FiStar,
+    "Rising Fast": FiArrowUp,
+    "Top Picks": FiAward,
+    "Fan Favorites": FiHeart,
+    "Most Watched": FiEye,
+    "Recommended": FiThumbsUp,
+    "Featured": FiSun,
+    "Watching Now": FiMonitor,
+    "Popular This Week": FiClock,
+    "Just Added": FiPlus,
+    "New Releases": FiCamera,
+    "Fresh Content": FiZap,
+    "Recently Updated": FiRefreshCw,
+    "Latest Movies": FiCalendar,
+  };
+  return map[text] || FiTrendingUp;
+};
 
 const genreColors = ["#f5c518", "#a855f7", "#3b82f6", "#06b6d4", "#ec4899", "#22c55e", "#f97316", "#ef4444"];
 const IMG_FALLBACK = "https://picsum.photos/seed/movie/300/170";
@@ -16,6 +38,7 @@ export default function ShopPage() {
   const [movies, setMovies] = useState([]);
   const [genres, setGenres] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     setLoading(true);
@@ -32,6 +55,10 @@ export default function ShopPage() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [input, genreId]);
 
   const activeQuery = input;
   const filtered = movies.filter(m => {
@@ -50,6 +77,10 @@ export default function ShopPage() {
     return true;
   });
 
+  const PER_PAGE = 20;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+  const pageMovies = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
+
   const title = activeQuery ? `Search: ${activeQuery}` : "Browse Movies";
   const desc = activeQuery
     ? `Search results for "${activeQuery}"`
@@ -62,7 +93,7 @@ export default function ShopPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl lg:text-3xl font-extrabold" style={{ color: "var(--text-primary)" }}>{title}</h1>
-          <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>{filtered.length} movie{filtered.length !== 1 ? "s" : ""} found</p>
+          <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>{filtered.length} movie{filtered.length !== 1 ? "s" : ""} found{totalPages > 1 ? ` — Page ${currentPage} of ${totalPages}` : ""}</p>
         </div>
         <div className="relative max-w-xs w-full">
           <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: "var(--text-muted)" }} size={16} />
@@ -109,8 +140,9 @@ export default function ShopPage() {
           <Link to="/movies" className="inline-block mt-4 px-6 py-2.5 bg-[#f5c518] text-black rounded-xl font-semibold text-sm">View All Movies</Link>
         </div>
       ) : (
+        <>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {filtered.map((movie) => {
+          {pageMovies.map((movie) => {
             const poster = movie.poster || movie.image || IMG_FALLBACK;
             const gColor = genreColors[(movie.genre_id || movie.id) % genreColors.length];
             return (
@@ -128,6 +160,13 @@ export default function ShopPage() {
                     onError={(e) => { e.target.src = IMG_FALLBACK; }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity" />
+                  {movie.badge && (
+                    <div className="absolute top-2 left-2">
+                      <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-[#f5c518] text-black font-bold shadow-md">
+                        {badgeIcon(movie.badge)({ size: 12 })} {movie.badge}
+                      </span>
+                    </div>
+                  )}
                   {movie.quality && (
                     <div className="absolute bottom-2 right-2 opacity-0 group-hover/card:opacity-100 transition-all duration-300 translate-y-2 group-hover/card:translate-y-0">
                       <span className="text-[10px] px-2 py-0.5 rounded bg-[#f5c518] text-black font-bold">{movie.quality}</span>
@@ -135,7 +174,11 @@ export default function ShopPage() {
                   )}
                 </div>
                 <div className="p-3">
-                  <h3 className="text-sm font-semibold truncate" style={{ color: "var(--text-primary)" }}>{movie.title}</h3>
+                  <h3 className="text-sm font-semibold truncate flex items-center gap-1" style={{ color: "var(--text-primary)" }}>
+                    {movie.type === "Season" && <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500 text-white font-bold shrink-0">Season</span>}
+                    {movie.type === "Episode" && <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500 text-white font-bold shrink-0">Episode</span>}
+                    {movie.title}
+                  </h3>
                   <div className="flex items-center gap-2 mt-1">
                     {movie.rating && <span className="text-xs text-[#f5c518] font-semibold">★ {movie.rating}</span>}
                     {movie.year && <span className="text-xs" style={{ color: "var(--text-muted)" }}>{movie.year}</span>}
@@ -146,6 +189,41 @@ export default function ShopPage() {
             );
           })}
         </div>
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-8">
+            <button
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-4 py-2 rounded-xl text-sm font-semibold disabled:opacity-40 transition-all hover:-translate-y-0.5"
+              style={{ backgroundColor: "var(--bg-card)", color: "var(--text-primary)", border: "1px solid var(--border-color)" }}
+            >
+              Previous
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className="w-9 h-9 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5"
+                style={{
+                  backgroundColor: page === currentPage ? "#f5c518" : "var(--bg-card)",
+                  color: page === currentPage ? "#000" : "var(--text-primary)",
+                  border: "1px solid var(--border-color)",
+                }}
+              >
+                {page}
+              </button>
+            ))}
+            <button
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 rounded-xl text-sm font-semibold disabled:opacity-40 transition-all hover:-translate-y-0.5"
+              style={{ backgroundColor: "var(--bg-card)", color: "var(--text-primary)", border: "1px solid var(--border-color)" }}
+            >
+              Next
+            </button>
+          </div>
+        )}
+        </>
       )}
     </div>
   );

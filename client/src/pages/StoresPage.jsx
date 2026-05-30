@@ -2,10 +2,10 @@ import { useState } from "react";
 import { FiMapPin, FiPhone, FiClock, FiNavigation, FiSearch } from "react-icons/fi";
 
 const stores = [
-  { name: "hiromartKigali", address: "KG 123 St, Kigali City Center", phone: "+250 788 000 001", hours: "Mon-Sat 8AM-8PM", coords: "-1.9441,30.0619" },
-  { name: "hiromartButare", address: "KN 456 Blvd, Butare", phone: "+250 788 000 002", hours: "Mon-Sat 8AM-7PM", coords: "-2.5967,29.7394" },
-  { name: "hiromartMusanze", address: "Northern Province, Musanze", phone: "+250 788 000 003", hours: "Mon-Sat 8AM-6PM", coords: "-1.4998,29.6340" },
-  { name: "hiromart Rubavu", address: "Western Province, Rubavu", phone: "+250 788 000 004", hours: "Mon-Sat 8AM-7PM", coords: "-1.6783,29.2585" },
+  { name: "AGFrKigali", address: "KG 123 St, Kigali City Center", phone: "+250 788 000 001", hours: "Mon-Sun 12AM-12PM", coords: "-1.9441,30.0619" },
+  { name: "AGFrButare", address: "KN 456 Blvd, Butare", phone: "+250 788 000 002", hours: "Mon-Sun 12AM-12PM", coords: "-2.5967,29.7394" },
+  { name: "AGFrMusanze", address: "Northern Province, Musanze", phone: "+250 788 000 003", hours: "Mon-Sun 12AM-12PM", coords: "-1.4998,29.6340" },
+  { name: "AGFrRubavu", address: "Western Province, Rubavu", phone: "+250 788 000 004", hours: "Mon-Sun 12AM-12PM", coords: "-1.6783,29.2585" },
 ];
 
 export default function StoresPage() {

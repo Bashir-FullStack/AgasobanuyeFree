@@ -46,7 +46,11 @@ const CrudTable = ({ title, endpoint, columns, fields, emptyMessage }) => {
   const openEdit = (item) => {
     const values = {};
     fields.forEach((f) => {
-      values[f.key] = item[f.key] !== undefined ? item[f.key] : '';
+      if (f.type === 'file') {
+        values[f.key] = '';
+      } else {
+        values[f.key] = item[f.key] !== undefined ? item[f.key] : '';
+      }
     });
     setForm(values);
     setEditing(item);
@@ -57,10 +61,31 @@ const CrudTable = ({ title, endpoint, columns, fields, emptyMessage }) => {
   const handleSave = async () => {
     try {
       setError('');
-      if (editing) {
-        await api.put(`${endpoint}/${editing.id}`, form);
+      const hasFiles = fields.some(f => f.type === 'file' && form[f.key] instanceof File);
+
+      if (hasFiles) {
+        const formData = new FormData();
+        fields.forEach(f => {
+          const val = form[f.key];
+          if (f.type === 'file') {
+            if (val instanceof File) {
+              formData.append(f.key, val);
+            }
+          } else {
+            formData.append(f.key, val === false || val === 0 ? String(val) : (val || ''));
+          }
+        });
+        if (editing) {
+          await api.put(`${endpoint}/${editing.id}`, formData);
+        } else {
+          await api.post(endpoint, formData);
+        }
       } else {
-        await api.post(endpoint, form);
+        if (editing) {
+          await api.put(`${endpoint}/${editing.id}`, form);
+        } else {
+          await api.post(endpoint, form);
+        }
       }
       setShowModal(false);
       setEditing(null);
@@ -215,6 +240,20 @@ const CrudTable = ({ title, endpoint, columns, fields, emptyMessage }) => {
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                       ))}
                     </select>
+                  </>
+                ) : f.type === 'file' ? (
+                  <>
+                    <label>{f.label}</label>
+                    <input
+                      type="file"
+                      accept={f.accept || '*/*'}
+                      onChange={(e) => setForm({ ...form, [f.key]: e.target.files[0] })}
+                    />
+                    {editing && (
+                      <small style={{ color: 'var(--text-secondary)', display: 'block', marginTop: 4 }}>
+                        Leave empty to keep existing {f.label.toLowerCase()}
+                      </small>
+                    )}
                   </>
                 ) : f.type === 'textarea' ? (
                   <>
