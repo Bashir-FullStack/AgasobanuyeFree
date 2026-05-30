@@ -46,7 +46,7 @@ const Layout = () => {
           <img src="https://i.ibb.co/sdytJ14n/Chat-GPT-Image-May-26-2026-06-12-32-AM.png" alt="Logo" className="w-8 h-8 rounded-full object-cover" />
           <h2 style={{ fontSize: 14 }}>AgasobanuyeFREE</h2>
         </div>
-        <nav className="sidebar-nav" style={{ overflowY: 'auto', minHeight: 0 }}>
+        <nav className="sidebar-nav">
           {navItems.map((item) => (
             <NavLink
               key={item.path}

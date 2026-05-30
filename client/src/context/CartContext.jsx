@@ -6,7 +6,7 @@ const CartContext = createContext();
 
 function loadCart() {
   try {
-    const saved = localStorage.getItem("classyshop_cart");
+    const saved = localStorage.getItem("agasobanuye_cart");
     return saved ? JSON.parse(saved) : [];
   } catch { return []; }
 }
@@ -35,7 +35,7 @@ async function syncLocalCartToServer(token) {
       }
     } catch {}
   }
-  localStorage.removeItem("classyshop_cart");
+  localStorage.removeItem("agasobanuye_cart");
 }
 
 export function CartProvider({ children }) {
@@ -44,7 +44,7 @@ export function CartProvider({ children }) {
   const [toast, setToast] = useState(null);
   const [initialized, setInitialized] = useState(false);
   const initializedRef = useRef(false);
-  const token = typeof window !== "undefined" ? localStorage.getItem("classyshop_token") : null;
+  const token = typeof window !== "undefined" ? localStorage.getItem("agasobanuye_token") : null;
   const lastLoginState = useRef(isLoggedIn);
 
   useEffect(() => {
@@ -80,7 +80,7 @@ export function CartProvider({ children }) {
   useEffect(() => {
     if (!initialized) return;
     if (!isLoggedIn || !token) {
-      localStorage.setItem("classyshop_cart", JSON.stringify(items));
+      localStorage.setItem("agasobanuye_cart", JSON.stringify(items));
     }
   }, [items, initialized, isLoggedIn, token]);
 

@@ -29,7 +29,7 @@ _recently_viewed");
         {products.map((p) => (
           <Link key={p.id || p._id} to={`/product/${p.id || p._id}`} className="group bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-md transition-all">
             <div className="aspect-square bg-gray-50 flex items-center justify-center p-3">
-              <img src={p.image} alt={p.name} className="max-w-full max-h-full object-contain group-hover:scale-105 transition duration-300" />
+              <img loading="lazy" src={p.image} alt={p.name} className="max-w-full max-h-full object-contain group-hover:scale-105 transition duration-300" />
             </div>
             <div className="p-2.5">
               <p className="text-xs text-gray-500 truncate">{p.name}</p>

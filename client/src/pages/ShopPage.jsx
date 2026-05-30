@@ -54,7 +54,7 @@ export default function ShopPage() {
     : "Browse our full catalog of Kinyarwanda-interpreted movies.";
 
   return (
-    <div className="space-y-6 pb-10">
+    <div className="space-y-1 pb-10">
       <SEO title={`${title} - AgasobanuyeFree Streaming`} description={desc} />
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -111,7 +111,7 @@ export default function ShopPage() {
                 style={{ backgroundColor: "var(--bg-card)", boxShadow: "var(--shadow)" }}
               >
                 <div className="relative aspect-video overflow-hidden">
-                  <img
+                  <img loading="lazy"
                     src={poster}
                     alt={movie.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-110"

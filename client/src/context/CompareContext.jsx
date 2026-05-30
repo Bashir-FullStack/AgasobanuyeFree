@@ -6,7 +6,7 @@ const CompareContext = createContext();
 
 function loadCompare() {
   try {
-    const saved = localStorage.getItem("classyshop_compare");
+    const saved = localStorage.getItem("agasobanuye_compare");
     return saved ? JSON.parse(saved) : [];
   } catch { return []; }
 }
@@ -17,7 +17,7 @@ export function CompareProvider({ children }) {
   const [initialized, setInitialized] = useState(false);
   const [toast, setToast] = useState(null);
   const initializedRef = useRef(false);
-  const token = typeof window !== "undefined" ? localStorage.getItem("classyshop_token") : null;
+  const token = typeof window !== "undefined" ? localStorage.getItem("agasobanuye_token") : null;
 
   useEffect(() => {
     if (initializedRef.current) return;
@@ -36,7 +36,7 @@ export function CompareProvider({ children }) {
   useEffect(() => {
     if (!initialized) return;
     if (!isLoggedIn || !token) {
-      localStorage.setItem("classyshop_compare", JSON.stringify(items));
+      localStorage.setItem("agasobanuye_compare", JSON.stringify(items));
     }
   }, [items, initialized, isLoggedIn, token]);
 

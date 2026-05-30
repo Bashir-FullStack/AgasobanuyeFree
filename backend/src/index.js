@@ -1,5 +1,9 @@
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const jwt = require('jsonwebtoken');
+const { body, validationResult } = require('express-validator');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
@@ -23,6 +27,11 @@ const upload = multer({
   },
 });
 
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback_dev_secret_change_me';
+const CORS_ORIGINS = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',').map(s => s.trim())
+  : ['http://localhost:5173', 'http://localhost:5174'];
+
 const authRouter = require('./routes/auth');
 const moviesRouter = require('./routes/movies');
 const genresRouter = require('./routes/genres');
@@ -34,40 +43,97 @@ const usersRouter = require('./routes/users');
 const promosRouter = require('./routes/promos');
 const reviewsRouter = require('./routes/reviews');
 const subscribersRouter = require('./routes/subscribers');
+const cartRoutes = require('./routes/cart');
+const wishlistRoutes = require('./routes/wishlist');
+const compareRoutes = require('./routes/compare');
+const ordersRoutes = require('./routes/orders');
+const addressesRoutes = require('./routes/addresses');
+const deliveryRoutes = require('./routes/delivery');
+const paymentsRoutes = require('./routes/payments');
+const couponsRoutes = require('./routes/coupons');
+const profileRoutes = require('./routes/profile');
+const subscribeRoutes = require('./routes/subscribe');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
-const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'admin_token_2026';
 
-app.use(cors());
+// Security headers
+app.use(helmet());
+
+// CORS
+app.use(cors({
+  origin: CORS_ORIGINS,
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use('/uploads', express.static(uploadDir));
 
-function authMiddleware(req, res, next) {
-  if (req.path.startsWith('/api/auth')) {
-    return next();
-  }
-  if (req.method === 'GET') {
-    return next();
-  }
+// Rate limit auth routes
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { error: 'Too many requests, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api/auth', authLimiter);
 
-  const authHeader = req.headers.authorization;
-  if (!authHeader || authHeader !== `Bearer ${ADMIN_TOKEN}`) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
+// Validation rules for POST/PUT
+const movieValidation = [
+  body('name').optional().isString().trim().notEmpty(),
+  body('description').optional().isString(),
+  body('genre').optional().isString(),
+  body('price').optional().isFloat({ min: 0 }),
+  body('rating').optional().isFloat({ min: 0, max: 10 }),
+];
 
+function validate(req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   next();
+}
+
+function userAuth(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized - no token provided' });
+  }
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ error: 'Token expired' });
+    }
+    return res.status(401).json({ error: 'Invalid token' });
+  }
 }
 
 function adminMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
-  if (!authHeader || authHeader !== `Bearer ${ADMIN_TOKEN}`) {
-    return res.status(401).json({ error: 'Unauthorized' });
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized - no token provided' });
   }
-  next();
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (decoded.role !== 'admin') {
+      return res.status(403).json({ error: 'Forbidden - admin access required' });
+    }
+    req.user = decoded;
+    next();
+  } catch (err) {
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ error: 'Token expired' });
+    }
+    return res.status(401).json({ error: 'Invalid token' });
+  }
 }
-
-app.use(authMiddleware);
 
 app.use('/api/auth', authRouter);
 app.use('/api/movies', moviesRouter);
@@ -80,10 +146,20 @@ app.use('/api/users', usersRouter);
 app.use('/api/promos', promosRouter);
 app.use('/api/reviews', reviewsRouter);
 app.use('/api/subscribers', subscribersRouter);
+app.use('/api/cart', userAuth, cartRoutes);
+app.use('/api/wishlist', userAuth, wishlistRoutes);
+app.use('/api/compare', userAuth, compareRoutes);
+app.use('/api/orders', userAuth, ordersRoutes);
+app.use('/api/addresses', userAuth, addressesRoutes);
+app.use('/api/delivery', deliveryRoutes);
+app.use('/api/payment', paymentsRoutes);
+app.use('/api/coupons', couponsRoutes);
+app.use('/api/auth', profileRoutes);
+app.use('/api/subscribe', subscribeRoutes);
 
 const supabase = require('./supabase');
 
-app.get('/api/admin/dashboard', adminMiddleware, async (req, res) => {
+app.get('/api/admin/dashboard', adminMiddleware, async (req, res, next) => {
   try {
     const [moviesResult, bookingsResult, usersResult] = await Promise.all([
       supabase.from('movies').select('*', { count: 'exact', head: true }),
@@ -103,11 +179,11 @@ app.get('/api/admin/dashboard', adminMiddleware, async (req, res) => {
       recentActivity: [],
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
-app.get('/api/admin/movies', adminMiddleware, async (req, res) => {
+app.get('/api/admin/movies', adminMiddleware, async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -122,7 +198,7 @@ app.get('/api/admin/movies', adminMiddleware, async (req, res) => {
     if (error) throw error;
     res.json({ data, total: count, page, limit });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
@@ -131,7 +207,7 @@ app.post('/api/admin/movies', adminMiddleware, upload.fields([
   { name: 'banner', maxCount: 1 },
   { name: 'video', maxCount: 1 },
   { name: 'images', maxCount: 10 },
-]), async (req, res) => {
+]), movieValidation, validate, async (req, res, next) => {
   try {
     const body = { ...req.body };
     const fields = { title: body.name, description: body.description, genre: body.genre, interpreter: body.interpreter, category: body.category, director: body.director, cast: body.cast, duration: body.duration, release_date: body.releaseDate, price: body.price ? parseFloat(body.price) : null, rating: body.rating ? parseFloat(body.rating) : null, trailer_url: body.trailerUrl, language: body.language, subtitle: body.subtitle, featured: body.featured === 'true', status: body.status || 'active' };
@@ -146,7 +222,7 @@ app.post('/api/admin/movies', adminMiddleware, upload.fields([
     if (error) throw error;
     res.status(201).json(data);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
@@ -154,7 +230,7 @@ app.put('/api/admin/movies/:id', adminMiddleware, upload.fields([
   { name: 'image', maxCount: 1 },
   { name: 'banner', maxCount: 1 },
   { name: 'video', maxCount: 1 },
-]), async (req, res) => {
+]), movieValidation, validate, async (req, res, next) => {
   try {
     const body = { ...req.body };
     const fields = {};
@@ -183,11 +259,11 @@ app.put('/api/admin/movies/:id', adminMiddleware, upload.fields([
     if (error) throw error;
     res.json(data);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
-app.get('/api/settings', async (req, res) => {
+app.get('/api/settings', async (req, res, next) => {
   try {
     const { data, error } = await supabase
       .from('web_settings')
@@ -197,7 +273,7 @@ app.get('/api/settings', async (req, res) => {
     (data || []).forEach(s => { settings[s.section] = s.data; });
     res.json(settings);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
@@ -205,9 +281,14 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
+// Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
-  res.status(500).json({ error: 'Internal server error' });
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).json({
+    error: err.message || 'Internal server error',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+  });
 });
 
 app.listen(PORT, () => {

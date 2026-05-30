@@ -2,10 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-
-if (localStorage.getItem('theme') === 'light') {
-  document.documentElement.classList.add('light');
-}
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
@@ -19,6 +15,11 @@ import UsersPage from './pages/UsersPage';
 import PromosPage from './pages/PromosPage';
 import ReviewsPage from './pages/ReviewsPage';
 import SubscribersPage from './pages/SubscribersPage';
+
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'light') {
+  document.documentElement.classList.add('light');
+}
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('admin_token');

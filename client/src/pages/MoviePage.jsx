@@ -48,7 +48,7 @@ export default function MoviePage() {
   return (
     <div className="space-y-6 pb-10">
       <div className="relative rounded-2xl overflow-hidden min-h-[250px] lg:min-h-[400px]">
-        <img
+        <img loading="lazy"
           src={backdrop}
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
@@ -174,7 +174,7 @@ export default function MoviePage() {
           </div>
 
           <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: "var(--bg-card)", boxShadow: "var(--shadow)" }}>
-            <img
+            <img loading="lazy"
               src={poster}
               alt={movie.title}
               className="w-full aspect-[2/3] object-cover"

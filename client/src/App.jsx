@@ -12,27 +12,9 @@ import { API } from "./config";
 import SEO from "./components/SEO";
 import { TranslationProvider } from "./i18n/TranslationContext";
 
-import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import ResetPasswordPage from "./pages/ResetPasswordPage";
-import OTPVerifyPage from "./pages/OTPVerifyPage";
-import CartPage from "./pages/CartPage";
+import React from "react";
 import ProductPage from "./pages/ProductPage";
-import WishlistPage from "./pages/WishlistPage";
-import ComparePage from "./pages/ComparePage";
-import ShopPage from "./pages/ShopPage";
-import CheckoutPage from "./pages/CheckoutPage";
-import CategoriesPage from "./pages/CategoriesPage";
-import CategoryPage from "./pages/CategoryPage";
-import OrdersPage from "./pages/OrdersPage";
-import ProfilePage from "./pages/ProfilePage";
-import HelpCenterPage from "./pages/HelpCenterPage";
-import AboutPage from "./pages/AboutPage";
-import ContactPage from "./pages/ContactPage";
-import TermsPage from "./pages/TermsPage";
 import SecurePaymentPage from "./pages/SecurePaymentPage";
-import OrderTrackingPage from "./pages/OrderTrackingPage";
 import DiscountPage from "./pages/DiscountPage";
 import CreditSlipPage from "./pages/CreditSlipPage";
 import SitemapPage from "./pages/SitemapPage";
@@ -41,8 +23,28 @@ import AccessoriesPage from "./pages/AccessoriesPage";
 import PricesDropPage from "./pages/PricesDropPage";
 import NewProductsPage from "./pages/NewProductsPage";
 import BestSellersPage from "./pages/BestSellersPage";
-import NotFoundPage from "./pages/NotFoundPage";
-import MoviePage from "./pages/MoviePage";
+
+const LoginPage = React.lazy(() => import("./pages/LoginPage"));
+const SignupPage = React.lazy(() => import("./pages/SignupPage"));
+const ForgotPasswordPage = React.lazy(() => import("./pages/ForgotPasswordPage"));
+const ResetPasswordPage = React.lazy(() => import("./pages/ResetPasswordPage"));
+const OTPVerifyPage = React.lazy(() => import("./pages/OTPVerifyPage"));
+const ShopPage = React.lazy(() => import("./pages/ShopPage"));
+const MoviePage = React.lazy(() => import("./pages/MoviePage"));
+const CartPage = React.lazy(() => import("./pages/CartPage"));
+const CheckoutPage = React.lazy(() => import("./pages/CheckoutPage"));
+const WishlistPage = React.lazy(() => import("./pages/WishlistPage"));
+const ComparePage = React.lazy(() => import("./pages/ComparePage"));
+const CategoriesPage = React.lazy(() => import("./pages/CategoriesPage"));
+const CategoryPage = React.lazy(() => import("./pages/CategoryPage"));
+const OrdersPage = React.lazy(() => import("./pages/OrdersPage"));
+const OrderTrackingPage = React.lazy(() => import("./pages/OrderTrackingPage"));
+const ProfilePage = React.lazy(() => import("./pages/ProfilePage"));
+const HelpCenterPage = React.lazy(() => import("./pages/HelpCenterPage"));
+const AboutPage = React.lazy(() => import("./pages/AboutPage"));
+const ContactPage = React.lazy(() => import("./pages/ContactPage"));
+const TermsPage = React.lazy(() => import("./pages/TermsPage"));
+const NotFoundPage = React.lazy(() => import("./pages/NotFoundPage"));
 
 /* ── Icons ── */
 const HomeIcon = () => (
@@ -156,8 +158,8 @@ function StreamingLayout({ children, seo }) {
         <div className="flex-shrink-0 px-5 py-5" style={{ borderBottom: "1px solid var(--border-color)" }}>
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-3" onClick={() => setSidebarOpen(false)}>
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#f5c518] to-[#d4a800] flex items-center justify-center text-black font-bold text-sm shadow-lg shadow-[#f5c518]/20">
-                A
+              <div className="w-15 h-10 rounded-xl bg-gradient-to-br from-[#f5c518] to-[#d4a800] flex items-center justify-center text-black font-bold text-sm shadow-lg shadow-[#f5c518]/20">
+                AGFr
               </div>
               <div>
                 <span className="text-lg font-extrabold tracking-tight" style={{ color: "var(--text-primary)" }}>AgasobanuyeFree</span>
@@ -193,7 +195,7 @@ function StreamingLayout({ children, seo }) {
         </div>
 
         <div className="flex-shrink-0 px-4 py-4 text-center border-t" style={{ borderColor: "var(--border-color)" }}>
-          <p className="text-[10px]" style={{ color: "var(--text-muted)" }}>AgasobanuyeFree Streaming v1.0</p>
+          <p className="text-[10px]" style={{ color: "var(--text-muted)" }}>AgasobanuyeFree Streaming v1.0.1</p>
         </div>
       </div>
 
@@ -694,6 +696,7 @@ export default function App() {
       <CartProvider>
         <WishlistProvider>
         <CompareProvider>
+        <React.Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div></div>}>
         <Routes>
           <Route path="/" element={<StreamingLayout seo={<SEO title="Home - AgasobanuyeFree Streaming" description="Ultimate African streaming experience - movies, live sports, and exclusive content" keywords="streaming, movies, live sports, African cinema" />}><HomePage /></StreamingLayout>} />
           <Route path="/login" element={<StreamingLayout seo={<SEO title="Login - AgasobanuyeFree Streaming" />}><LoginPage /></StreamingLayout>} />
@@ -733,6 +736,7 @@ export default function App() {
           <Route path="/favorites" element={<Navigate to="/wishlist" replace />} />
           <Route path="*" element={<StreamingLayout><NotFoundPage /></StreamingLayout>} />
         </Routes>
+        </React.Suspense>
         </CompareProvider>
         </WishlistProvider>
       </CartProvider>

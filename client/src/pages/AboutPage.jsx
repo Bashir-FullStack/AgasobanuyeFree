@@ -81,7 +81,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {team.map((m) => (
             <div key={m.name} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-center hover:shadow-md transition">
-              <img src={m.img} alt={m.name} className="w-20 h-20 rounded-full mx-auto mb-3 object-cover" />
+              <img loading="lazy" src={m.img} alt={m.name} className="w-20 h-20 rounded-full mx-auto mb-3 object-cover" />
               <h4 className="text-sm font-semibold text-dark">{m.name}</h4>
               <p className="text-xs text-gray-500 mt-1">{m.role}</p>
             </div>

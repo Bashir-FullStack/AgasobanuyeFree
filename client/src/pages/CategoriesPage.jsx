@@ -41,7 +41,7 @@ export default function CategoriesPage() {
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="relative h-[200px] md:h-[260px] overflow-hidden">
-        <img src="https://i.pinimg.com/736x/97/e8/f4/97e8f4d0e2143e88fbfe2db38476a7f3.jpg" alt="" className="w-full h-full object-cover" />
+        <img loading="lazy" src="https://i.pinimg.com/736x/97/e8/f4/97e8f4d0e2143e88fbfe2db38476a7f3.jpg" alt="" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20 flex items-center">
           <div className="max-w-[1430px] mx-auto px-4 w-full">
             <div className="max-w-lg">
@@ -57,7 +57,7 @@ export default function CategoriesPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
           {categories.map((cat) => (
             <button key={cat.name} onClick={() => navigate(`/category/${cat.name.toLowerCase()}`)} className={`group relative rounded-xl overflow-hidden h-[150px] text-left ${activeCategory === cat.name ? "ring-2 ring-primary" : ""}`}>
-              <img src={cat.image} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+              <img loading="lazy" src={cat.image} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-5">
                 <span className="text-primary text-xs font-semibold uppercase tracking-wider">{cat.tag}</span>
                 <h3 className="text-white text-base font-bold mt-0.5">{cat.name}</h3>

@@ -1,7 +1,7 @@
 {
-  "name": "agasobanuyefree",
+  "name": "AgasobanuyeFree",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AgasobanuyeFree - Movie/TV Streaming Platform",
   "scripts": {
     "dev:client": "cd client && npm run dev",

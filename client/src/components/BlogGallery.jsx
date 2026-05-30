@@ -35,7 +35,7 @@ export default function BlogGallery() {
               <SwiperSlide key={post.id}>
                 <a href="#" className="block group rounded-lg overflow-hidden border border-gray-100 hover:shadow-md transition-shadow bg-white">
                   <div className="overflow-hidden h-48 relative">
-                    <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                    <img loading="lazy" src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                     <span className="absolute bottom-3 left-3 flex items-center gap-1.5 text-white/80 text-xs"><FiCalendar size={12} /> May 21, 2026</span>
                   </div>

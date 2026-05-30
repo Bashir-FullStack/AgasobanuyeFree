@@ -13,18 +13,12 @@ export default function TermsPage() {
       </div>
       <div className="max-w-[800px] mx-auto px-4 py-10">
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 space-y-6 text-sm text-gray-600 leading-relaxed">
-          <section><h2 className="text-lg font-bold text-dark mb-3">1. Introduction</h2><p>Welcome to hiromart
-
-. These Terms & Conditions govern your use of our website and services. By accessing or purchasing from hiromart
-
-, you agree to be bound by these terms.</p></section>
+          <section><h2 className="text-lg font-bold text-dark mb-3">1. Introduction</h2><p>Welcome to hiromart. These Terms & Conditions govern your use of our website and services. By accessing or purchasing from hiromart, you agree to be bound by these terms.</p></section>
           <section><h2 className="text-lg font-bold text-dark mb-3">2. Account Registration</h2><p>You must provide accurate and complete information when creating an account. You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account.</p></section>
           <section><h2 className="text-lg font-bold text-dark mb-3">3. Orders & Payment</h2><p>All orders are subject to availability and confirmation. We reserve the right to cancel any order. Prices are listed in Rwandan Francs (FRw) and include applicable taxes unless stated otherwise.</p></section>
           <section><h2 className="text-lg font-bold text-dark mb-3">4. Shipping & Delivery</h2><p>We ship within 5-7 business days for standard delivery. Express delivery (2-3 days) is available at an additional cost. Delivery times are estimates and not guaranteed.</p></section>
           <section><h2 className="text-lg font-bold text-dark mb-3">5. Returns & Refunds</h2><p>Items can be returned within 30 days of delivery in unused condition. Refunds are processed within 5-7 business days after we receive the returned item.</p></section>
-          <section><h2 className="text-lg font-bold text-dark mb-3">6. Intellectual Property</h2><p>All content on this website — including product images, descriptions, logos, and trademarks — is the property of hiromart
-
- and may not be used without permission.</p></section>
+          <section><h2 className="text-lg font-bold text-dark mb-3">6. Intellectual Property</h2><p>All content on this website — including product images, descriptions, logos, and trademarks — is the property of hiromartand may not be used without permission.</p></section>
           <section><h2 className="text-lg font-bold text-dark mb-3">7. Limitation of Liability</h2><p>hiromart
 
  is not liable for indirect, incidental, or consequential damages arising from the use of our products or services. Our total liability is limited to the purchase price of the product.</p></section>

@@ -6,7 +6,7 @@ const WishlistContext = createContext();
 
 function loadWishlist() {
   try {
-    const saved = localStorage.getItem("classyshop_wishlist");
+    const saved = localStorage.getItem("agasobanuye_wishlist");
     return saved ? JSON.parse(saved) : [];
   } catch { return []; }
 }
@@ -18,7 +18,7 @@ export function WishlistProvider({ children }) {
   const [toast, setToast] = useState(null);
   const initializedRef = useRef(false);
 
-  const token = typeof window !== "undefined" ? localStorage.getItem("classyshop_token") : null;
+  const token = typeof window !== "undefined" ? localStorage.getItem("agasobanuye_token") : null;
 
   useEffect(() => {
     if (initializedRef.current) return;
@@ -37,7 +37,7 @@ export function WishlistProvider({ children }) {
   useEffect(() => {
     if (!initialized) return;
     if (!isLoggedIn || !token) {
-      localStorage.setItem("classyshop_wishlist", JSON.stringify(items));
+      localStorage.setItem("agasobanuye_wishlist", JSON.stringify(items));
     }
   }, [items, initialized, isLoggedIn, token]);
 

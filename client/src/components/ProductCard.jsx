@@ -29,7 +29,7 @@ export default function ProductCard({ product, showTimer }) {
     <div className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-lg hover:border-gray-200 transition-all duration-300 flex flex-col h-full card-hover">
       <div className="relative bg-gradient-to-b from-gray-50 to-white aspect-square flex items-center justify-center p-4 overflow-hidden">
         <Link to={`/product/${product.id}`} className="w-full h-full flex items-center justify-center">
-          <img src={product.image} alt={product.name} className="max-w-full max-h-full object-contain group-hover:scale-110 transition duration-500" />
+          <img loading="lazy" src={product.image} alt={product.name} className="max-w-full max-h-full object-contain group-hover:scale-110 transition duration-500" />
         </Link>
         {product.badge && <span className={`absolute top-3 left-3 text-[10px] font-bold px-3 py-1.5 text-white flex items-center justify-center shadow-md ${badgeDesign(product.badge).color}`} style={{ clipPath: badgeDesign(product.badge).shape }}>{product.badge}</span>}
         {product.sale && <span className="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm">{product.sale}</span>}
@@ -77,7 +77,7 @@ export default function ProductCard({ product, showTimer }) {
           <div className="relative bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4 animate-scale-in">
             <button onClick={() => setQuickShop(false)} className="absolute top-3 right-3 w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-200 transition"><FiX size={16} /></button>
             <div className="flex gap-4 mb-4">
-              <div className="w-20 h-20 rounded-xl bg-gray-50 flex items-center justify-center overflow-hidden shrink-0"><img src={product.image} alt={product.name} className="w-full h-full object-contain" /></div>
+              <div className="w-20 h-20 rounded-xl bg-gray-50 flex items-center justify-center overflow-hidden shrink-0"><img loading="lazy" src={product.image} alt={product.name} className="w-full h-full object-contain" /></div>
               <div className="min-w-0">
                 <p className="text-sm font-bold text-dark truncate">{product.name}</p>
                 <p className="text-sm font-bold text-primary mt-1">{toRWF(product.price)}</p>

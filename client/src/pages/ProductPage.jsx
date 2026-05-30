@@ -176,12 +176,12 @@ export default function ProductPage() {
             <div className="flex flex-col gap-3 shrink-0">
               {allImages.map((img, i) => (
                 <button key={i} onClick={() => setSelectedImage(i)} className={`w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 overflow-hidden shrink-0 transition ${selectedImage === i ? "border-primary" : "border-gray-200 hover:border-gray-400"}`}>
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <img loading="lazy" src={img} alt="" className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
             <div className="relative flex-1 rounded-xl overflow-hidden bg-white cursor-crosshair" onMouseMove={handleZoom} onMouseLeave={() => setZoom(s => ({ ...s, show: false }))}>
-              <img ref={imgRef} src={allImages[selectedImage]} alt={product.name} className="w-full h-[350px] md:h-[500px] object-contain p-6 transition-transform duration-200" style={zoom.show ? { transform: "scale(2)", transformOrigin: `${zoom.x}% ${zoom.y}%` } : {}} />
+              <img loading="lazy" ref={imgRef} src={allImages[selectedImage]} alt={product.name} className="w-full h-[350px] md:h-[500px] object-contain p-6 transition-transform duration-200" style={zoom.show ? { transform: "scale(2)", transformOrigin: `${zoom.x}% ${zoom.y}%` } : {}} />
               {product.sale && (
                 <span className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-2.5 py-1 rounded">{product.sale}</span>
               )}
@@ -296,10 +296,10 @@ export default function ProductPage() {
               {/* Payment logos */}
               <div className="flex items-center justify-center gap-2 pt-1">
                 <span className="text-[10px] text-gray-400">Checkout securely with</span>
-                <img src="https://i.pinimg.com/736x/7f/eb/02/7feb0256dc66ee941c1a5d4c945ed60b.jpg" alt="Visa" className="h-5" />
-                <img src="https://i.pinimg.com/736x/a2/68/8b/a2688b6db24e7fdc9b6de25aa7196345.jpg" alt="Mastercard" className="h-5" />
-                <img src="https://i.pinimg.com/1200x/69/72/3e/69723ed815801e8334a66b6f27edd9de.jpg" alt="PayPal" className="h-5" />
-                <img src="https://i.pinimg.com/736x/d1/08/7d/d1087d1abc263b95a2bea32cd9e70ba0.jpg" alt="Amex" className="h-5" />
+                <img loading="lazy" src="https://i.pinimg.com/736x/7f/eb/02/7feb0256dc66ee941c1a5d4c945ed60b.jpg" alt="Visa" className="h-5" />
+                <img loading="lazy" src="https://i.pinimg.com/736x/a2/68/8b/a2688b6db24e7fdc9b6de25aa7196345.jpg" alt="Mastercard" className="h-5" />
+                <img loading="lazy" src="https://i.pinimg.com/1200x/69/72/3e/69723ed815801e8334a66b6f27edd9de.jpg" alt="PayPal" className="h-5" />
+                <img loading="lazy" src="https://i.pinimg.com/736x/d1/08/7d/d1087d1abc263b95a2bea32cd9e70ba0.jpg" alt="Amex" className="h-5" />
               </div>
             </div>
 
@@ -419,7 +419,7 @@ export default function ProductPage() {
                         {review.images && review.images.length > 0 && (
                           <div className="mt-2 flex flex-wrap gap-2 ml-11">
                             {review.images.map((img, imgIndex) => (
-                              <img key={imgIndex} src={img} alt="Review" className="w-20 h-20 object-cover rounded-lg" />
+                              <img loading="lazy" key={imgIndex} src={img} alt="Review" className="w-20 h-20 object-cover rounded-lg" />
                             ))}
                           </div>
                         )}
