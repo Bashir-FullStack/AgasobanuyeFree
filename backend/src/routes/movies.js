@@ -4,17 +4,16 @@ const supabase = require('../supabase');
 
 const ALLOWED_MOVIE_FIELDS = [
   'title', 'description', 'poster', 'image', 'backdrop', 'banner', 'thumbnail',
-  'video_url', 'trailer_url', 'year', 'duration', 'rating', 'badge', 'episode',
+  'video_url', 'year', 'duration', 'rating', 'badge', 'episode',
   'type', 'interpreter', 'genre', 'genres', 'price', 'featured', 'uploader',
-  'progress', 'interpreter_id', 'category_id', 'language', 'country', 'views'
+  'progress'
 ];
 
 const MOVIE_FIELDS = [
   'id', 'title', 'description', 'poster', 'image', 'backdrop', 'banner',
-  'thumbnail', 'video_url', 'trailer_url', 'year', 'duration', 'rating',
+  'thumbnail', 'video_url', 'year', 'duration', 'rating',
   'badge', 'episode', 'type', 'interpreter', 'genre', 'genres', 'price',
-  'featured', 'uploader', 'progress', 'interpreter_id', 'category_id',
-  'language', 'country', 'views', 'created_at', 'updated_at'
+  'featured', 'uploader', 'progress', 'created_at', 'updated_at'
 ];
 
 function validateMovieFields(body, isUpdate = false) {
@@ -30,28 +29,28 @@ function validateMovieFields(body, isUpdate = false) {
     }
   }
 
-  if (body.year !== undefined && body.year !== null) {
+  if (body.year !== undefined && body.year !== null && body.year !== '') {
     const y = Number(body.year);
     if (isNaN(y) || !Number.isInteger(y) || y < 1888 || y > 2100) {
       errors.push('year must be an integer between 1888 and 2100');
     }
   }
 
-  if (body.duration !== undefined && body.duration !== null) {
+  if (body.duration !== undefined && body.duration !== null && body.duration !== '') {
     const d = Number(body.duration);
     if (isNaN(d) || !Number.isInteger(d) || d < 0) {
       errors.push('duration must be a non-negative integer');
     }
   }
 
-  if (body.rating !== undefined && body.rating !== null) {
+  if (body.rating !== undefined && body.rating !== null && body.rating !== '') {
     const r = Number(body.rating);
     if (isNaN(r) || r < 0 || r > 10) {
       errors.push('rating must be a number between 0 and 10');
     }
   }
 
-  if (body.price !== undefined && body.price !== null) {
+  if (body.price !== undefined && body.price !== null && body.price !== '') {
     const p = Number(body.price);
     if (isNaN(p) || p < 0) {
       errors.push('price must be a non-negative number');
@@ -72,7 +71,7 @@ function validateMovieFields(body, isUpdate = false) {
 function filterFields(body, allowed) {
   const filtered = {};
   for (const key of allowed) {
-    if (body[key] !== undefined) {
+    if (body[key] !== undefined && body[key] !== '') {
       filtered[key] = body[key];
     }
   }

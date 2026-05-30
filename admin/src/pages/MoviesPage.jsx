@@ -5,24 +5,21 @@ import { api } from '../config';
 const MoviesPage = () => {
   const [interpreters, setInterpreters] = useState([]);
   const [genres, setGenres] = useState([]);
-  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const fetchOptions = async () => {
       try {
-        const [interpData, genreData, catData] = await Promise.all([
+        const [interpData, genreData] = await Promise.all([
           api.get('/interpreters'),
           api.get('/genres'),
-          api.get('/categories'),
         ]);
-        const toOptions = (items) =>
+        const toNameOptions = (items) =>
           (Array.isArray(items) ? items : items.data || []).map((item) => ({
-            value: item.id,
+            value: item.name,
             label: item.name,
           }));
-        setInterpreters(toOptions(interpData));
-        setGenres(toOptions(genreData));
-        setCategories(toOptions(catData));
+        setInterpreters(toNameOptions(interpData));
+        setGenres(toNameOptions(genreData));
       } catch (err) {
         console.error('Failed to load options', err);
       }
@@ -30,58 +27,39 @@ const MoviesPage = () => {
     fetchOptions();
   }, []);
 
-  const getNameFromId = (id, options) => {
-    const match = options.find((o) => String(o.value) === String(id));
-    return match ? match.label : id;
-  };
-
   const columns = [
     { key: 'id', label: 'ID' },
     { key: 'title', label: 'Title' },
     { key: 'description', label: 'Description' },
-    {
-      key: 'interpreter_id',
-      label: 'Interpreter',
-      render: (val) => getNameFromId(val, interpreters),
-    },
-    {
-      key: 'genre_id',
-      label: 'Genre',
-      render: (val) => getNameFromId(val, genres),
-    },
-    {
-      key: 'category_id',
-      label: 'Category',
-      render: (val) => getNameFromId(val, categories),
-    },
-    { key: 'active', label: 'Active' },
+    { key: 'interpreter', label: 'Interpreter' },
+    { key: 'genre', label: 'Genre' },
+    { key: 'year', label: 'Year' },
+    { key: 'rating', label: 'Rating' },
+    { key: 'featured', label: 'Featured' },
   ];
 
   const fields = [
     { key: 'title', label: 'Title', type: 'text', placeholder: 'Movie title' },
     { key: 'description', label: 'Description', type: 'textarea' },
     { key: 'video_url', label: 'Video URL', type: 'text', placeholder: 'https://...' },
-    { key: 'poster_url', label: 'Poster URL', type: 'text', placeholder: 'https://...' },
+    { key: 'poster', label: 'Poster URL', type: 'text', placeholder: 'https://...' },
+    { key: 'year', label: 'Year', type: 'number' },
     { key: 'duration', label: 'Duration (min)', type: 'number' },
+    { key: 'rating', label: 'Rating (0-10)', type: 'number' },
     {
-      key: 'interpreter_id',
+      key: 'interpreter',
       label: 'Interpreter',
       type: 'select',
       options: interpreters,
     },
     {
-      key: 'genre_id',
+      key: 'genre',
       label: 'Genre',
       type: 'select',
       options: genres,
     },
-    {
-      key: 'category_id',
-      label: 'Category',
-      type: 'select',
-      options: categories,
-    },
-    { key: 'active', label: 'Active', type: 'checkbox', defaultValue: true },
+    { key: 'featured', label: 'Featured', type: 'checkbox', defaultValue: false },
+    { key: 'uploader', label: 'Uploader', type: 'text', placeholder: 'Admin' },
   ];
 
   return (

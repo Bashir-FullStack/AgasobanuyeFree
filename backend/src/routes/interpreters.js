@@ -3,7 +3,7 @@ const { body, param, validationResult } = require('express-validator');
 const supabase = require('../supabase');
 
 const TABLE = 'interpreters';
-const SELECT_FIELDS = 'id, name, created_at, updated_at';
+const SELECT_FIELDS = 'id, name, created_at';
 
 function handleValidation(req, res) {
   const errors = validationResult(req);
