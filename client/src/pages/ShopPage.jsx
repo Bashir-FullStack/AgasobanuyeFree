@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 import { API } from "../config";
@@ -8,10 +8,11 @@ const genreColors = ["#f5c518", "#a855f7", "#3b82f6", "#06b6d4", "#ec4899", "#22
 const IMG_FALLBACK = "https://picsum.photos/seed/movie/300/170";
 
 export default function ShopPage() {
-  const [searchParams] = useSearchParams();
-  const searchQuery = searchParams.get("search") || "";
+  const [searchParams, setSearchParams] = useSearchParams();
   const genreId = searchParams.get("genre") || "";
+  const debounceRef = useRef(null);
 
+  const [input, setInput] = useState(searchParams.get("search") || "");
   const [movies, setMovies] = useState([]);
   const [genres, setGenres] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,9 +33,10 @@ export default function ShopPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const activeQuery = input;
   const filtered = movies.filter(m => {
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
+    if (activeQuery) {
+      const q = activeQuery.toLowerCase();
       const match = (m.title || "").toLowerCase().includes(q) ||
         (m.description || "").toLowerCase().includes(q) ||
         (m.genre || "").toLowerCase().includes(q) ||
@@ -48,9 +50,9 @@ export default function ShopPage() {
     return true;
   });
 
-  const title = searchQuery ? `Search: ${searchQuery}` : "Browse Movies";
-  const desc = searchQuery
-    ? `Search results for "${searchQuery}"`
+  const title = activeQuery ? `Search: ${activeQuery}` : "Browse Movies";
+  const desc = activeQuery
+    ? `Search results for "${activeQuery}"`
     : "Browse our full catalog of Kinyarwanda-interpreted movies.";
 
   return (
@@ -62,19 +64,27 @@ export default function ShopPage() {
           <h1 className="text-2xl lg:text-3xl font-extrabold" style={{ color: "var(--text-primary)" }}>{title}</h1>
           <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>{filtered.length} movie{filtered.length !== 1 ? "s" : ""} found</p>
         </div>
-        <form
-          onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.target); const q = fd.get("q"); if (q) window.location.href = `/movies?search=${encodeURIComponent(q)}`; }}
-          className="relative max-w-xs w-full"
-        >
+        <div className="relative max-w-xs w-full">
           <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: "var(--text-muted)" }} size={16} />
           <input
-            name="q"
-            defaultValue={searchQuery}
+            value={input}
+            onChange={(e) => {
+              const val = e.target.value;
+              setInput(val);
+              clearTimeout(debounceRef.current);
+              debounceRef.current = setTimeout(() => {
+                if (val) {
+                  setSearchParams({ search: val, ...(genreId ? { genre: genreId } : {}) });
+                } else {
+                  setSearchParams(genreId ? { genre: genreId } : {});
+                }
+              }, 300);
+            }}
             placeholder="Search movies..."
             className="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl outline-none"
             style={{ backgroundColor: "var(--bg-input)", color: "var(--text-primary)", border: "1px solid var(--border-color)" }}
           />
-        </form>
+        </div>
       </div>
 
       {loading ? (
@@ -94,7 +104,7 @@ export default function ShopPage() {
           <div className="text-6xl mb-4">🎬</div>
           <h2 className="text-xl font-bold mb-2" style={{ color: "var(--text-primary)" }}>No movies found</h2>
           <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-            {searchQuery ? `No results for "${searchQuery}". Try a different search.` : "No movies available yet."}
+            {activeQuery ? `No results for "${activeQuery}". Try a different search.` : "No movies available yet."}
           </p>
           <Link to="/movies" className="inline-block mt-4 px-6 py-2.5 bg-[#f5c518] text-black rounded-xl font-semibold text-sm">View All Movies</Link>
         </div>
